@@ -34,29 +34,34 @@ Teal/smoke composite studio shots, all color.
 | File | Description |
 |------|-------------|
 | `CH.jpg` | Front-facing, "energy orb" hands, full blue smoke composite — **HERO** |
-| `DSC_1018.jpg` | Same pose, clean teal background, no smoke — Shows gallery #6 |
-| `DSC_1018.png` | Duplicate of above — **skip** |
 | `DSC_1035.jpg` | Hand reaching toward camera, teal bg — Clases gallery #4 |
-| `DSC_1035CH.jpg` | Same + blue smoke composite — Shows gallery #1 |
 | `DSC_1040.jpg` | Dramatic side profile, clean teal — Clases gallery #5 |
-| `DSC_1040CH.jpg` | Same profile + blue smoke — Shows gallery #2 |
 
 ### Folder 2 — `Press Kit-20260223T224133Z-1-001/Press Kit/`
 Black bg B&W formal shots + grey bg color professional shots.
 
 | File | Description |
 |------|-------------|
-| `Copy of RAFAEL ALTA-12.jpg` | B&W, tuxedo + bow tie, magic wand — Shows gallery #3 |
-| `Copy of RAFAEL ALTA-18.jpg` | B&W, tuxedo + bow tie, linked metal rings — Shows gallery #4 |
-| `Copy of RAFAEL ALTA-19.jpg` | B&W, tuxedo + bow tie, coins in hand — Shows gallery #5 |
 | `DSC_0281.jpg` | Color, grey bg, full-body 3-piece suit — **Shows biography photo** |
 | `DSC_0295.jpg` | Color, grey bg, hand raised near ear (mentalist) — Clases gallery #1 |
 | `DSC_0306.jpg` | Color, grey bg, seated on stool, hand at temple — Clases gallery #2 + **Clases biography photo** |
 | `DSC_0309.jpg` | Color, grey bg, seated, direct gaze — Clases gallery #3 |
 
+### Folder 3 — `Fotos show/`
+Real show photos — intimate library venue, warm ambient lighting.
+
+| File | Description |
+|------|-------------|
+| `showmagiarafa-3-of-18-1.jpg` | Rafael close-up, gesturing to audience, bookshelf bg — **Shows gallery #1** (tall hero slot) |
+| `showmagiarafa-17-of-18-1.jpg` | Rafael side profile, library setting, hands gesturing — Shows gallery #2 |
+| `showmagiarafa-3-of-35-1.jpg` | Rafael dramatic dark lighting, holding colorful props — Shows gallery #3 |
+| `showmagiarafa-1-of-18-1.jpg` | Wide room shot, full audience seated, Rafael performing — Shows gallery #4 |
+| `showmagiarafa-2-of-35-1-1.jpg` | Rafael on stage with bookshelf bg, colorful items — Shows gallery #5 |
+| `showmagiarafa-13-of-18-1.jpg` | Audience reaction shot, man holding purple fabric — Shows gallery #6 |
+
 ### Image Assignment Summary
 - **Hero**: `FOTOS RAFA 2026.../CH.jpg`
-- **Shows gallery** (6): DSC_1035CH, DSC_1040CH, RAFAEL ALTA-12, RAFAEL ALTA-18, RAFAEL ALTA-19, DSC_1018
+- **Shows gallery** (6): all from `Fotos show/` — showmagiarafa-3-of-18-1, -17-of-18-1, -3-of-35-1, -1-of-18-1, -2-of-35-1-1, -13-of-18-1
 - **Shows bio portrait**: `Press Kit.../DSC_0281.jpg`
 - **Clases gallery** (5): DSC_0295, DSC_0306, DSC_0309, DSC_1035, DSC_1040
 - **Clases bio portrait**: `Press Kit.../DSC_0306.jpg`
@@ -161,7 +166,7 @@ Text-based names — no image files available:
 
 ### ✅ Completed
 
-**Step 1 — Base structure** (committed to file)
+**Step 1 — Base structure**
 - DOCTYPE, lang="es", meta description, viewport, full title
 - Google Fonts import (Montserrat 300–900 + italic)
 - All CSS custom properties (full color palette, radii, timing tokens)
@@ -169,72 +174,70 @@ Text-based names — no image files available:
 - Global utility classes: `.container`, `.section-tag`, `.section-title`, `.section-subtitle`, `.btn`, `.btn-primary`, `.btn-outline`, `.btn-lg`, `.gold-divider`, `.fade-up`
 - Custom scrollbar, gold text selection
 
-**Step 2 — Loader + Nav** (committed to file)
+**Step 2 — Loader + Nav**
 - Loader: full-screen overlay, animated name, gold progress bar (0→100% in 1.2s), fades out after 1.8s, sets `body.loaded`
 - Nav: fixed pill, glass blur, gold border, `.scrolled` state on scroll
 - Nav: desktop links (Shows · Clases · Contacto) with pill active state
 - Nav: mobile hamburger → animated X → pill drawer dropdown
 - JS: loader sequence, custom gold cursor (dot + lerp ring), nav scroll/hamburger/active-link IntersectionObserver, global fade-up IntersectionObserver + MutationObserver
 
+**Step 3 — Hero section**
+- `#hero`: 100dvh, `CH.jpg` background at `brightness(0.35)`, radial + linear gradient overlay
+- Parallax: `--hero-parallax` CSS variable updated via scroll + rAF (ticking pattern)
+- Canvas particles: 60 gold `rgba(201,168,76,α)` dots, slow upward drift, shimmer opacity, reinitialize at bottom
+- Content: eyebrow pill tag → H1 `Rafael / Gorrochotegui` (gold span) → italic slogan → 2 CTAs (primary + outline) → scroll indicator
+- Stagger reveal after loader: eyebrow(0ms) → name(150ms) → slogan(300ms) → CTAs(450ms) → scroll(600ms), triggered at 1850ms
+- Mobile: CTAs stack vertically at < 480px
+
+**Step 4 — Shows section** (1633 lines total)
+- `#shows`: centered header — pill tag + H2 "Magia en Vivo" + subtitle, fade-up stagger
+- `#shows-gallery`: 12-col CSS Grid (300px/220px/200px rows). Item 1 spans cols 1–7, rows 1–2 (tall portrait); items 2–3 stack right; items 4–6 bottom row of 3. Hover: scale + brightness + bottom gradient overlay
+- `#shows-services`: 6 cards (3-col), watermark numbers (opacity 0.07→0.13 hover), unicode icons, hover lift + gold glow + border reveal
+- `#shows-bio`: 42/58 grid split, DSC_0281 portrait left, bio text + 3 stats (10+ años · 5+ países · Miles). Portrait zoom on hover
+- `#shows-logos`: CSS `marqueeLeft` animation (22s), duplicate `.marquee-items` for seamless loop, hover pauses
+- `#shows-contact`: 2-col name+email row, tipo select (custom SVG chevron), textarea, `✦ Solicitar Show` CTA
+- `#shows-social`: Instagram · TikTok · WhatsApp · Email — pill outline buttons with inline SVGs
+- Responsive: 2-col cards at 1024px → 1-col at 768px; gallery resets to 2-col; bio stacks vertically at 768px
+
+**Shows gallery updated**: replaced all 6 gallery images with real show photos from `Fotos show/` folder (intimate library venue shots)
+
+**Step 5 — Clases section** (1876 lines total)
+- Gold divider `✦` ornament between Shows and Clases blocks (`.gold-divider`)
+- `#clases`: centered header — tag "— Clases —" + H2 "Aprende el Arte de la Magia" + subtitle, fade-up stagger
+- `#clases-gallery`: same 12-col grid, 5 photos (DSC_0295, DSC_0306, DSC_0309, DSC_1035, DSC_1040)
+- `#clases-tiers`: 2 tier cards side-by-side (max-width 820px) — Niños (6–11) + Jóvenes (12–17), `.card-num`, `.card-age`, `.card-desc`
+- `#clases-bio`: 58/42 split FLIPPED — DSC_0306 portrait right (`bio-portrait-right`), bio text left, 3 individual `fade-up` stats
+- `#clases-logos`: same marquee with `.marquee-rtl` → `marqueeRight` animation (scrolls right, opposite direction)
+- `#clases-contact`: tutor name · email · edad del alumno (select 6–17, each year as option) · mensaje · `✦ Solicitar Clase`
+- `#clases-social`: same 4 social buttons (Instagram · TikTok · WhatsApp · Email)
+- `#footer`: name, "Caracas, Venezuela", email, copyright 2025
+
+**Step 6 — Scroll animations**
+- Verified 40/40 `.fade-up` elements fire `.visible` correctly on scroll (programmatic full-page scroll test passed)
+- Added `fade-up` + staggered `data-delay` (100/200/300ms) to Shows bio stats (was missing, now matches Clases)
+- Added `fade-up` to both `.social-row` divs (Shows + Clases)
+- Added `fade-up` to the gold divider
+
 ---
 
 ### 🔲 Still to Build
 
-**Step 3 — Hero section**
-- Full-screen 100dvh, CH.jpg background with brightness(0.35) filter
-- Parallax: `translateY(scroll * 0.4)` via CSS variable + rAF
-- Canvas particle layer (60 gold particles, slow upward drift)
-- Radial gradient overlay
-- Content: eyebrow tag · H1 name · slogan · two CTA buttons (primary + outline) · scroll indicator arrow
-- Staggered fade-in after loader: eyebrow → name → slogan → CTAs → arrow (0/150/300/450/600ms delays)
-
-**Step 4 — Shows section**
-- Section header (centered: tag + H2 + subtitle)
-- Asymmetric photo gallery grid (12-column CSS Grid, 6 photos, exact nth-child placement from plan)
-- 6 service cards (3-col grid, watermark number, icon, hover lift + gold glow)
-- Biography block (60/40 split, DSC_0281 portrait, bio text, 3 stats)
-- Logo marquee (left-scrolling, text names, pause on hover)
-- Contact form (name · email · select · textarea · submit CTA)
-- Social links row (Instagram · TikTok · WhatsApp — pill outline buttons)
-
-**Step 5 — Clases section**
-- Gold divider (✦) between Shows and Clases
-- Section header
-- Photo gallery grid (same structure, 5 photos from Clases set)
-- 2 tier cards (Niños + Jóvenes, side-by-side, max-width 800px)
-- Biography block (40/60 split — FLIPPED, DSC_0306 portrait on right)
-- Logo marquee (right-scrolling — opposite direction)
-- Contact form (tutor name · email · age select 6–17 · textarea · submit CTA)
-- Social links row
-- Footer
-
-**Step 6 — Scroll animations**
-- Wire up `data-delay` attributes on all gallery items, service cards, stats
-- Staggered card entrance delays
-- Verify all `.fade-up` elements are correctly observed
-
 **Step 7 — Visual effects**
-- Floating particle canvas (already planned in hero, extracted to global background layer)
-- Custom gold cursor hover states (already initialized, needs interactive element hookup)
-- Button shimmer sweep on hover (already in CSS via `::after`)
-- Gallery hover: scale image + fade overlay
+- Button shimmer sweep on hover (`.btn-primary::after` already in CSS — verify it works)
+- Gallery hover overlay already implemented in Step 4 — verify Clases gallery too
 
 **Step 8 — Mobile responsiveness**
-- Breakpoints: 1024px (tablet), 768px (mobile L), 480px (mobile S)
-- Gallery grid: 2-col tablet → 1-col mobile
-- Service cards: 3-col → 2-col → 1-col
-- Bio: 2-col → stacked
-- Hero text sizing with clamp()
-- CTAs: stacked on mobile
-- Nav: hamburger already done
+- Core breakpoints already written in Steps 3 and 4 (1024px, 768px, 480px)
+- Verify at 375px minimum: hero text, card layout, form fields, nav
+- Test bio stacking, gallery collapse, CTA button sizes
 
 **Step 9 — Final polish**
-- Spacing consistency pass
+- Spacing consistency pass across all sections
 - Transition smoothness check
 - Typography hierarchy review
-- Cross-section consistency (both sections look like siblings)
-- Lazy loading on all images except hero
-- `will-change` cleanup
+- Cross-section consistency (Shows and Clases look like siblings)
+- Lazy loading on all images except hero (already added `loading="lazy"` in Steps 3–4)
+- `will-change` cleanup (currently only on `.hero-bg`)
 
 ---
 
