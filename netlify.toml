@@ -1,0 +1,28 @@
+# Netlify configuration for rafaelgmagia.com
+
+# ── Redirects ──────────────────────────────────────────────────
+# Force www → apex (optional, uncomment if preferred)
+# [[redirects]]
+#   from = "https://www.rafaelgmagia.com/*"
+#   to   = "https://rafaelgmagia.com/:splat"
+#   status = 301
+#   force  = true
+
+# ── Security Headers ───────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Prevent site from being embedded in iframes (clickjacking)
+    X-Frame-Options = "DENY"
+
+    # Stop browsers from MIME-sniffing the content type
+    X-Content-Type-Options = "nosniff"
+
+    # Only send origin in referrer header when navigating inside HTTPS
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # Restrict browser features (no camera, microphone, etc.)
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+
+    # Upgrade insecure requests; allow Google Fonts and own origin only
+    Content-Security-Policy = "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none';"
