@@ -7,13 +7,14 @@
       name="description"
       content="Mago y mentalista venezolano con más de 10 años de experiencia. Shows privados, corporativos y clases para niños y jóvenes en Caracas, Venezuela."
     />
-    <title>Rafael Gorrochotegui — Mago y Mentalista | Caracas, Venezuela</title>
+    <title>Rafael Gorrochotegui | Mago y Mentalista en Caracas, Venezuela</title>
     <link
       rel="icon"
       type="image/svg+xml"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23111111'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='30' fill='%23c9a84c'%3ERG%3C/text%3E%3C/svg%3E"
     />
 
+    <link rel="preload" as="image" href="img/hero-ch.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -593,7 +594,7 @@
       .hero-bg {
         position: absolute;
         inset: 0;
-        background-image: url("FOTOS RAFA 2026-20260223T224134Z-1-001/FOTOS RAFA 2026/CH.jpg");
+        background-image: url("img/hero-ch.jpg");
         background-size: cover;
         background-position: center top;
         background-repeat: no-repeat;
@@ -801,6 +802,7 @@
         display: grid;
         grid-template-columns: repeat(12, 1fr);
         grid-template-rows: 300px 220px 200px;
+        grid-auto-rows: 230px;
         gap: 10px;
       }
 
@@ -900,9 +902,6 @@
       #shows-gallery .gallery-item:nth-child(8) img {
         object-position: center 40%;
       }
-      #shows-gallery .gallery-item:nth-child(9) img {
-        object-position: center 55%;
-      }
 
       /* Clases gallery — 5 photos, same pattern */
       #clases-gallery .gallery-item:nth-child(1) {
@@ -989,10 +988,20 @@
       }
 
       .card-icon {
-        font-size: 1.4rem;
         margin-bottom: 20px;
         display: block;
         line-height: 1;
+        color: var(--c-gold);
+      }
+
+      .card-icon svg {
+        width: 26px;
+        height: 26px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
       }
 
       .card-title {
@@ -1379,6 +1388,7 @@
         }
         .gallery-grid {
           grid-template-rows: 240px 180px 160px;
+          grid-auto-rows: 180px;
         }
         .marquee-logo {
           height: 90px;
@@ -1413,6 +1423,12 @@
         #clases-gallery .gallery-item:nth-child(1) {
           grid-column: 1 / -1;
           grid-row: auto;
+          aspect-ratio: 16 / 9;
+        }
+
+        /* 8 photos: keep the odd one out from sitting alone at half width */
+        #shows-gallery .gallery-item:last-child {
+          grid-column: 1 / -1;
           aspect-ratio: 16 / 9;
         }
 
@@ -1562,44 +1578,6 @@
         color: var(--c-grey-mid);
       }
 
-      /* ── Gallery placeholder (Coming Soon) ── */
-      .gallery-placeholder {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        background: var(--c-black-light);
-        border-radius: inherit;
-        padding: 24px;
-        text-align: center;
-      }
-
-      .gallery-placeholder .ph-icon {
-        font-size: 1.6rem;
-        color: var(--c-gold-dim);
-        line-height: 1;
-      }
-
-      .gallery-placeholder .ph-title {
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: var(--c-gold);
-        margin-top: 4px;
-      }
-
-      .gallery-placeholder .ph-sub {
-        font-size: 0.6rem;
-        font-weight: 500;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        color: var(--c-off-white-muted);
-      }
-
       /* ═══════════════════════════════════════════════════════
            EASTER EGG: CARD FLIP REVEAL
         ═══════════════════════════════════════════════════════ */
@@ -1738,6 +1716,35 @@
           transform: translateX(-50%) translateY(-4px);
         }
       }
+
+      /* ═══════════════════════════════════════════════════════
+           REDUCED MOTION
+        ═══════════════════════════════════════════════════════ */
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .fade-up,
+        .hero-eyebrow,
+        .hero-name,
+        .hero-slogan,
+        .hero-ctas,
+        .hero-scroll {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        .hero-bg {
+          transform: none !important;
+        }
+        .hero-scroll-line,
+        .marquee-track {
+          animation: none;
+        }
+        .marquee-track {
+          overflow-x: auto;
+        }
+      }
     </style>
   </head>
   <body>
@@ -1812,7 +1819,7 @@
             sentidos.
           </p>
           <div class="hero-ctas" id="heroCtas">
-            <a href="#shows" class="btn btn-primary btn-lg">✦ Ver Shows</a>
+            <a href="#shows" class="btn btn-primary btn-lg">Ver Shows</a>
             <a href="#clases" class="btn btn-outline btn-lg"
               >Descubrir Clases</a
             >
@@ -1837,7 +1844,7 @@
         <!-- Shows Header -->
         <section id="shows">
           <div class="container section-header-centered">
-            <span class="section-tag fade-up">— Shows —</span>
+            <span class="section-tag fade-up">Shows</span>
             <h2 class="section-title fade-up" data-delay="80">Magia en Vivo</h2>
             <p class="section-subtitle fade-up" data-delay="160">
               Experiencias únicas diseñadas para cada ocasión. Desde reuniones
@@ -1852,42 +1859,42 @@
             <div class="gallery-grid">
               <div class="gallery-item fade-up" data-delay="0">
                 <img
-                  src="Fotos show/showmagiarafa-3-of-18-1.jpg"
+                  src="img/show-1.jpg"
                   alt="Rafael Gorrochotegui — Show en vivo"
                   loading="lazy"
                 />
               </div>
               <div class="gallery-item fade-up" data-delay="60">
                 <img
-                  src="Fotos show/img_2925.jpg"
+                  src="img/show-2.jpg"
                   alt="Rafael Gorrochotegui — Actuación"
                   loading="lazy"
                 />
               </div>
               <div class="gallery-item fade-up" data-delay="120">
                 <img
-                  src="Fotos show/showmagiarafa-17-of-18-1.jpg"
+                  src="img/show-3.jpg"
                   alt="Rafael Gorrochotegui — Magia en vivo"
                   loading="lazy"
                 />
               </div>
               <div class="gallery-item fade-up" data-delay="160">
                 <img
-                  src="Fotos show/showmagiarafa-2-of-35-1-1.jpg"
-                  alt="Rafael Gorrochotegui — Público y show"
+                  src="img/show-4.jpg"
+                  alt="Rafael Gorrochotegui en escena con el público"
                   loading="lazy"
                 />
               </div>
               <div class="gallery-item fade-up" data-delay="200">
                 <img
-                  src="Fotos show/showmagiarafa-3-of-35-1.jpg"
+                  src="img/show-5.jpg"
                   alt="Rafael Gorrochotegui — Escenario"
                   loading="lazy"
                 />
               </div>
               <div class="gallery-item fade-up" data-delay="240">
                 <img
-                  src="Fotos show/img_2915-1.jpg"
+                  src="img/show-6.jpg"
                   alt="Rafael Gorrochotegui — Reacción del público"
                   loading="lazy"
                 />
@@ -1895,15 +1902,15 @@
 
               <div class="gallery-item fade-up" data-delay="320">
                 <img
-                  src="Fotos show/showmagiarafa-13-of-18-1.jpg"
+                  src="img/show-7.jpg"
                   alt="Rafael Gorrochotegui — Mentalismo"
                   loading="lazy"
                 />
               </div>
               <div class="gallery-item fade-up" data-delay="360">
                 <img
-                  src="Fotos show/showmagiarafa-2-of-35-1-1.jpg"
-                  alt="Rafael Gorrochotegui — Escenario grande"
+                  src="img/show-8.jpg"
+                  alt="Sala completa durante el show de Rafael Gorrochotegui"
                   loading="lazy"
                 />
               </div>
@@ -1921,7 +1928,15 @@
                 data-secret="Magia que se siente, no se explica."
               >
                 <span class="card-num">01</span>
-                <span class="card-icon">✦</span>
+                <span class="card-icon" aria-hidden="true"
+                  ><svg viewBox="0 0 24 24">
+                    <path
+                      d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"
+                    />
+                    <path d="m14 7 3 3" />
+                    <path d="M5 6v4M7 8H3M19 14v4M21 16h-4M10 2v2M11 3H9" />
+                  </svg></span
+                >
                 <h3 class="card-title">Shows Privados</h3>
                 <p class="card-desc">
                   Momentos íntimos y personalizados para cumpleaños,
@@ -1936,7 +1951,12 @@
                 data-secret="Tu equipo no lo verá venir."
               >
                 <span class="card-num">02</span>
-                <span class="card-icon">◆</span>
+                <span class="card-icon" aria-hidden="true"
+                  ><svg viewBox="0 0 24 24">
+                    <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                    <rect width="20" height="14" x="2" y="6" rx="2" />
+                  </svg></span
+                >
                 <h3 class="card-title">Shows Corporativos</h3>
                 <p class="card-desc">
                   Potencia tus eventos empresariales con una experiencia mágica
@@ -1950,7 +1970,13 @@
                 data-secret="El escenario es solo el comienzo."
               >
                 <span class="card-num">03</span>
-                <span class="card-icon">▲</span>
+                <span class="card-icon" aria-hidden="true"
+                  ><svg viewBox="0 0 24 24">
+                    <polygon
+                      points="12 2.5 14.9 8.4 21.5 9.35 16.75 13.95 17.85 20.5 12 17.4 6.15 20.5 7.25 13.95 2.5 9.35 9.1 8.4 12 2.5"
+                    />
+                  </svg></span
+                >
                 <h3 class="card-title">Grandes Shows</h3>
                 <p class="card-desc">
                   Producciones para teatros, auditorios y eventos masivos.
@@ -1963,7 +1989,14 @@
                 data-secret="Donde menos lo esperas, más te asombra."
               >
                 <span class="card-num">04</span>
-                <span class="card-icon">●</span>
+                <span class="card-icon" aria-hidden="true"
+                  ><svg viewBox="0 0 24 24">
+                    <path
+                      d="M5 9c-1.5 1.5-3 3.2-3 5.5A5.5 5.5 0 0 0 7.5 20c1.8 0 3-.5 4.5-2 1.5 1.5 2.7 2 4.5 2a5.5 5.5 0 0 0 5.5-5.5c0-2.3-1.5-4-3-5.5l-7-7-7 7Z"
+                    />
+                    <path d="M12 18v4" />
+                  </svg></span
+                >
                 <h3 class="card-title">Performances</h3>
                 <p class="card-desc">
                   Actos de close-up y mentalismo para ferias, inauguraciones,
@@ -1977,7 +2010,12 @@
                 data-secret="Un 'sí' que nadie olvidará."
               >
                 <span class="card-num">05</span>
-                <span class="card-icon">✿</span>
+                <span class="card-icon" aria-hidden="true"
+                  ><svg viewBox="0 0 24 24">
+                    <circle cx="9" cy="12" r="5.5" />
+                    <circle cx="15" cy="12" r="5.5" />
+                  </svg></span
+                >
                 <h3 class="card-title">Bodas</h3>
                 <p class="card-desc">
                   El día más especial merece un momento mágico. Un show elegante
@@ -1991,7 +2029,14 @@
                 data-secret="Lo imposible tiene un consultor."
               >
                 <span class="card-num">06</span>
-                <span class="card-icon">✧</span>
+                <span class="card-icon" aria-hidden="true"
+                  ><svg viewBox="0 0 24 24">
+                    <path
+                      d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg></span
+                >
                 <h3 class="card-title">Consultoría Mágica</h3>
                 <p class="card-desc">
                   Asesoría profesional para producciones de TV, cine, teatro o
@@ -2008,7 +2053,7 @@
             <div class="bio-split bio-portrait-left fade-up">
               <div class="bio-split-portrait">
                 <img
-                  src="Press Kit-20260223T224133Z-1-001/Press Kit/DSC_0281.jpg"
+                  src="img/bio-shows.jpg"
                   alt="Rafael Gorrochotegui — Foto biografía"
                   loading="lazy"
                 />
@@ -2052,42 +2097,42 @@
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/kisspng-logo-hard-rock-cafe-brand-vector-graphics-hard-rock-cafe-logo-svg-vector-amp-png-transpare-5b62cb0179b531.3826885115332011534985-2-removebg-preview-2.webp"
+                  src="img/logo-hardrock.webp"
                   alt="Hard Rock Cafe"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/j304129262___cac2a1mara_venezolana_de_la_educaciac2b3n_privada-removebg-preview-1.webp"
+                  src="img/logo-cavep.webp"
                   alt="CAVEP"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/farmatodo-logo-png_seeklogo-354130.webp"
+                  src="img/logo-farmatodo.webp"
                   alt="Farmatodo"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/291964160_417888827031463_7575244820026136694_n-removebg-preview-1.webp"
+                  src="img/logo-4.webp"
                   alt="Logo"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/299014605_493082649487802_7926992834088412454_n-removebg-preview-1.webp"
+                  src="img/logo-5.webp"
                   alt="Logo"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/e7710258-2e89-4ed2-9547-00828b238890-1.webp"
+                  src="img/logo-6.webp"
                   alt="Logo"
                 /><span class="marquee-sep"></span>
               </div>
@@ -2096,42 +2141,42 @@
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/kisspng-logo-hard-rock-cafe-brand-vector-graphics-hard-rock-cafe-logo-svg-vector-amp-png-transpare-5b62cb0179b531.3826885115332011534985-2-removebg-preview-2.webp"
+                  src="img/logo-hardrock.webp"
                   alt="Hard Rock Cafe"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/j304129262___cac2a1mara_venezolana_de_la_educaciac2b3n_privada-removebg-preview-1.webp"
+                  src="img/logo-cavep.webp"
                   alt="CAVEP"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/farmatodo-logo-png_seeklogo-354130.webp"
+                  src="img/logo-farmatodo.webp"
                   alt="Farmatodo"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/291964160_417888827031463_7575244820026136694_n-removebg-preview-1.webp"
+                  src="img/logo-4.webp"
                   alt="Logo"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/299014605_493082649487802_7926992834088412454_n-removebg-preview-1.webp"
+                  src="img/logo-5.webp"
                   alt="Logo"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/e7710258-2e89-4ed2-9547-00828b238890-1.webp"
+                  src="img/logo-6.webp"
                   alt="Logo"
                 /><span class="marquee-sep"></span>
               </div>
@@ -2144,7 +2189,7 @@
           <div class="container">
             <div class="contact-inner">
               <div class="contact-header fade-up">
-                <span class="section-tag">— Contacto —</span>
+                <span class="section-tag">Contacto</span>
                 <h2 class="section-title">Solicita tu Show</h2>
               </div>
               <form
@@ -2213,7 +2258,7 @@
                 </div>
                 <div class="form-submit">
                   <button type="submit" class="btn btn-primary btn-lg">
-                    ✦ Solicitar Show
+                    Solicitar Show
                   </button>
                 </div>
               </form>
@@ -2292,7 +2337,7 @@
         <!-- Clases Header -->
         <section id="clases">
           <div class="container section-header-centered">
-            <span class="section-tag fade-up">— Clases —</span>
+            <span class="section-tag fade-up">Clases</span>
             <h2 class="section-title fade-up" data-delay="80">
               Aprende el Arte de la Magia
             </h2>
@@ -2308,39 +2353,39 @@
           <div class="container">
             <div class="gallery-grid">
               <div class="gallery-item fade-up" data-delay="0">
-                <div class="gallery-placeholder">
-                  <span class="ph-icon">✦</span>
-                  <p class="ph-title">Próximamente</p>
-                  <p class="ph-sub">Coming Soon</p>
-                </div>
+                <img
+                  src="img/clases-1.jpg"
+                  alt="Rafael Gorrochotegui, mentalista"
+                  loading="lazy"
+                />
               </div>
               <div class="gallery-item fade-up" data-delay="80">
-                <div class="gallery-placeholder">
-                  <span class="ph-icon">◆</span>
-                  <p class="ph-title">Próximamente</p>
-                  <p class="ph-sub">Coming Soon</p>
-                </div>
+                <img
+                  src="img/clases-2.jpg"
+                  alt="Rafael Gorrochotegui, retrato de estudio"
+                  loading="lazy"
+                />
               </div>
               <div class="gallery-item fade-up" data-delay="120">
-                <div class="gallery-placeholder">
-                  <span class="ph-icon">▲</span>
-                  <p class="ph-title">Próximamente</p>
-                  <p class="ph-sub">Coming Soon</p>
-                </div>
+                <img
+                  src="img/clases-3.jpg"
+                  alt="Rafael Gorrochotegui, mirada directa"
+                  loading="lazy"
+                />
               </div>
               <div class="gallery-item fade-up" data-delay="160">
-                <div class="gallery-placeholder">
-                  <span class="ph-icon">●</span>
-                  <p class="ph-title">Próximamente</p>
-                  <p class="ph-sub">Coming Soon</p>
-                </div>
+                <img
+                  src="img/clases-4.jpg"
+                  alt="Rafael Gorrochotegui, ilusionismo de cerca"
+                  loading="lazy"
+                />
               </div>
               <div class="gallery-item fade-up" data-delay="200">
-                <div class="gallery-placeholder">
-                  <span class="ph-icon">✧</span>
-                  <p class="ph-title">Próximamente</p>
-                  <p class="ph-sub">Coming Soon</p>
-                </div>
+                <img
+                  src="img/clases-5.jpg"
+                  alt="Rafael Gorrochotegui, perfil dramático"
+                  loading="lazy"
+                />
               </div>
             </div>
           </div>
@@ -2390,7 +2435,7 @@
               <div class="bio-split-content">
                 <span class="section-tag">Rafael como Maestro</span>
                 <h2 class="section-title">
-                  Más que trucos — una transformación
+                  Más que trucos: una transformación
                 </h2>
                 <p class="bio-text">
                   Como maestro, Rafael cree que la magia es una herramienta
@@ -2416,7 +2461,7 @@
               </div>
               <div class="bio-split-portrait">
                 <img
-                  src="Press Kit-20260223T224133Z-1-001/Press Kit/DSC_0306.jpg"
+                  src="img/bio-clases.jpg"
                   alt="Rafael Gorrochotegui — Maestro de magia"
                   loading="lazy"
                 />
@@ -2433,42 +2478,42 @@
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/kisspng-logo-hard-rock-cafe-brand-vector-graphics-hard-rock-cafe-logo-svg-vector-amp-png-transpare-5b62cb0179b531.3826885115332011534985-2-removebg-preview-2.webp"
+                  src="img/logo-hardrock.webp"
                   alt="Hard Rock Cafe"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/j304129262___cac2a1mara_venezolana_de_la_educaciac2b3n_privada-removebg-preview-1.webp"
+                  src="img/logo-cavep.webp"
                   alt="CAVEP"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/farmatodo-logo-png_seeklogo-354130.webp"
+                  src="img/logo-farmatodo.webp"
                   alt="Farmatodo"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/291964160_417888827031463_7575244820026136694_n-removebg-preview-1.webp"
+                  src="img/logo-4.webp"
                   alt="Logo"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/299014605_493082649487802_7926992834088412454_n-removebg-preview-1.webp"
+                  src="img/logo-5.webp"
                   alt="Logo"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/e7710258-2e89-4ed2-9547-00828b238890-1.webp"
+                  src="img/logo-6.webp"
                   alt="Logo"
                 /><span class="marquee-sep"></span>
               </div>
@@ -2477,42 +2522,42 @@
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/kisspng-logo-hard-rock-cafe-brand-vector-graphics-hard-rock-cafe-logo-svg-vector-amp-png-transpare-5b62cb0179b531.3826885115332011534985-2-removebg-preview-2.webp"
+                  src="img/logo-hardrock.webp"
                   alt="Hard Rock Cafe"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/j304129262___cac2a1mara_venezolana_de_la_educaciac2b3n_privada-removebg-preview-1.webp"
+                  src="img/logo-cavep.webp"
                   alt="CAVEP"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/farmatodo-logo-png_seeklogo-354130.webp"
+                  src="img/logo-farmatodo.webp"
                   alt="Farmatodo"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/291964160_417888827031463_7575244820026136694_n-removebg-preview-1.webp"
+                  src="img/logo-4.webp"
                   alt="Logo"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/299014605_493082649487802_7926992834088412454_n-removebg-preview-1.webp"
+                  src="img/logo-5.webp"
                   alt="Logo"
                 /><span class="marquee-sep"></span>
               </div>
               <div class="marquee-item">
                 <img
                   class="marquee-logo"
-                  src="Fotos Logo/e7710258-2e89-4ed2-9547-00828b238890-1.webp"
+                  src="img/logo-6.webp"
                   alt="Logo"
                 /><span class="marquee-sep"></span>
               </div>
@@ -2525,7 +2570,7 @@
           <div class="container">
             <div class="contact-inner">
               <div class="contact-header fade-up">
-                <span class="section-tag">— Contacto —</span>
+                <span class="section-tag">Contacto</span>
                 <h2 class="section-title">Solicita una Clase</h2>
               </div>
               <form
@@ -2602,7 +2647,7 @@
                 </div>
                 <div class="form-submit">
                   <button type="submit" class="btn btn-primary btn-lg">
-                    ✦ Solicitar Clase
+                    Solicitar Clase
                   </button>
                 </div>
               </form>
@@ -2843,6 +2888,8 @@
       (function () {
         var canvas = document.getElementById("heroCanvas");
         if (!canvas) return;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches)
+          return;
         var ctx = canvas.getContext("2d");
         var W = 0,
           H = 0;

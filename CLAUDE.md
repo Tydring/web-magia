@@ -220,24 +220,20 @@ Text-based names — no image files available:
 
 ---
 
-### 🔲 Still to Build
+**Steps 7–9 — Polish pass (2026-07-21)**
+- All page images now served from `img/` as web-sized copies (~3.3MB total vs ~45MB of camera originals). Originals untouched in their folders; regenerate with `sips` if photos change.
+- Clases gallery placeholders ("Próximamente / Coming Soon") replaced with the five assigned studio photos (clases-1 through clases-5).
+- Fixed Shows gallery grid: items were placed into rows 4–5 with no defined height; added `grid-auto-rows`. Deduplicated showmagiarafa-2-of-35 (slot 8 now uses the wide room shot, showmagiarafa-1-of-18).
+- Service card unicode icons (✦ ◆ ▲ ● ✿ ✧) replaced with inline stroke SVG icons (wand, briefcase, star, spade, rings, eye).
+- Removed the ✦ prefix from CTA buttons; the motif stays in the divider and card backs.
+- Section tags no longer carry literal "— X —" dashes; pill border does the framing.
+- Added `prefers-reduced-motion` support (fade-ups visible, marquee/particles/parallax off).
+- Hero image preloaded; verified desktop 1440px and mobile 375px via Playwright, zero broken images.
+- On mobile the 8th Shows photo spans full width instead of sitting orphaned at half width.
 
-**Step 7 — Visual effects**
-- Button shimmer sweep on hover (`.btn-primary::after` already in CSS — verify it works)
-- Gallery hover overlay already implemented in Step 4 — verify Clases gallery too
-
-**Step 8 — Mobile responsiveness**
-- Core breakpoints already written in Steps 3 and 4 (1024px, 768px, 480px)
-- Verify at 375px minimum: hero text, card layout, form fields, nav
-- Test bio stacking, gallery collapse, CTA button sizes
-
-**Step 9 — Final polish**
-- Spacing consistency pass across all sections
-- Transition smoothness check
-- Typography hierarchy review
-- Cross-section consistency (Shows and Clases look like siblings)
-- Lazy loading on all images except hero (already added `loading="lazy"` in Steps 3–4)
-- `will-change` cleanup (currently only on `.hero-bg`)
+### 🔲 Remaining before launch
+- Contact forms submit via `mailto:` (opens the visitor's mail app). Wire Formspree or EmailJS for real delivery.
+- Logos 4–6 in the marquee still have generic `alt="Logo"`; get real names from Rafael.
 
 ---
 
