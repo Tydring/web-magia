@@ -1,0 +1,389 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-03T00:00:00Z",
+  "title": "Design System: Rafael Gorrochotegui — rafaelgmagia.com",
+  "extensions": {
+    "colorMeta": {
+      "gold": {
+        "role": "primary",
+        "displayName": "Stage Gold",
+        "canonical": "#c9a84c",
+        "tonalRamp": [
+          "#2b230e",
+          "#463a19",
+          "#645425",
+          "#836e31",
+          "#a58a3d",
+          "#c9a84c",
+          "#dcc178",
+          "#eddca8"
+        ]
+      },
+      "gold-bright": {
+        "role": "primary",
+        "displayName": "Footlight Gold",
+        "canonical": "#e8c96a",
+        "tonalRamp": [
+          "#33290f",
+          "#52421c",
+          "#735d29",
+          "#977a38",
+          "#bd9c4e",
+          "#e8c96a",
+          "#f0d891",
+          "#f7e8bd"
+        ]
+      },
+      "gold-dim": {
+        "role": "primary",
+        "displayName": "Ember Gold",
+        "canonical": "#a07830",
+        "tonalRamp": [
+          "#241a08",
+          "#3c2c10",
+          "#564018",
+          "#715620",
+          "#886728",
+          "#a07830",
+          "#c09a52",
+          "#ddc189"
+        ]
+      },
+      "black-deep": {
+        "role": "neutral",
+        "displayName": "Stage Black",
+        "canonical": "#080808",
+        "tonalRamp": [
+          "#080808",
+          "#111111",
+          "#141414",
+          "#1a1a1a",
+          "#2a2a2a",
+          "#2e2e2e",
+          "#555555",
+          "#888888"
+        ]
+      },
+      "black-card": {
+        "role": "neutral",
+        "displayName": "Prop Black",
+        "canonical": "#141414",
+        "tonalRamp": [
+          "#080808",
+          "#111111",
+          "#141414",
+          "#1a1a1a",
+          "#242424",
+          "#333333",
+          "#4d4d4d",
+          "#6b6b6b"
+        ]
+      },
+      "off-white": {
+        "role": "neutral",
+        "displayName": "Candlelight White",
+        "canonical": "#f0ece4",
+        "tonalRamp": [
+          "#2b2925",
+          "#4a463f",
+          "#6a655b",
+          "#8c8578",
+          "#aea798",
+          "#cfc9bd",
+          "#f0ece4",
+          "#f9f7f2"
+        ]
+      },
+      "grey-border": {
+        "role": "neutral",
+        "displayName": "Hairline Grey",
+        "canonical": "#2e2e2e",
+        "tonalRamp": [
+          "#0e0e0e",
+          "#1c1c1c",
+          "#2e2e2e",
+          "#404040",
+          "#555555",
+          "#6e6e6e",
+          "#888888",
+          "#b0b0b0"
+        ]
+      },
+      "shadow-ink": {
+        "role": "neutral",
+        "displayName": "Shadow Ink",
+        "canonical": "rgba(0, 0, 0, 0.5)",
+        "tonalRamp": [
+          "rgba(0,0,0,0.85)",
+          "rgba(0,0,0,0.75)",
+          "rgba(0,0,0,0.55)",
+          "rgba(0,0,0,0.5)",
+          "rgba(0,0,0,0.4)",
+          "rgba(0,0,0,0.3)",
+          "rgba(0,0,0,0.15)",
+          "rgba(0,0,0,0.05)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page-defining names and show titles; 900 uppercase, negative tracking, sub-1 line-height, often with one gold word or character."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section titles; 900 weight, -0.025em tracking."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card titles and marquee brand names; 700 weight."
+      },
+      "lede": {
+        "displayName": "Lede / Voice",
+        "purpose": "Slogans, show ledes, spotlit hooks; 300 italic in dim off-white — the site's spoken register."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Paragraph copy; 300 weight, 1.75+ line-height, dim off-white, ~46-58ch measure."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "All small functional text; 600 uppercase micro-labels, 0.07em (buttons/nav) to 0.34em (billing lines) tracking."
+      },
+      "scale": {
+        "displayName": "Enumerated size ramp",
+        "purpose": "Four families: micro-labels 0.58-0.78rem; UI/body 0.82-1.1rem; fluid clamp endpoints 1.15-3.5rem plus 4.6/6/8rem; singletons 1.7rem (stats) and 4.5rem (watermark numerals). Mirrors frontmatter typography.scale."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-lift",
+        "value": "0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(201,168,76,0.1)",
+        "purpose": "Service/tier card hover, paired with translateY(-6px)."
+      },
+      {
+        "name": "cta-glow",
+        "value": "0 0 28px rgba(201,168,76,0.5), 0 0 56px rgba(201,168,76,0.2)",
+        "purpose": "Primary button hover — deliberately zero-offset pure halo (site-wide signature)."
+      },
+      {
+        "name": "floating-chrome",
+        "value": "0 8px 32px rgba(0,0,0,0.4)",
+        "purpose": "Scrolled navbar."
+      },
+      {
+        "name": "artifact-drop",
+        "value": "0 34px 90px -24px rgba(0,0,0,0.85)",
+        "purpose": "Staging the client flyer like a physical poster."
+      },
+      {
+        "name": "focus-halo",
+        "value": "0 0 0 3px rgba(201,168,76,0.1)",
+        "purpose": "Form field focus, with border shifted to gold-alpha-50."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-spring",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All reveals and hover transitions (fade-up 0.8s, button/card lifts, image zooms)."
+      },
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Utility easing (loader bar); rarely used elsewhere."
+      },
+      {
+        "name": "fade-up",
+        "value": "opacity 0.8s ease-spring, translateY(32px) -> 0",
+        "purpose": "IntersectionObserver reveal at 0.12 threshold with data-delay stagger (100-300ms)."
+      },
+      {
+        "name": "marquee-loop",
+        "value": "22s linear infinite (logos) / 30s linear infinite (ticker)",
+        "purpose": "Infinite loops are strictly linear; duplicated track halves; hover pauses; off under reduced motion."
+      },
+      {
+        "name": "scroll-variable",
+        "value": "rAF-throttled scroll -> CSS custom property (--hero-parallax, --ap 0..1)",
+        "purpose": "Scroll-driven staging; CSS owns the mapping from progress to transform/filter/opacity."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "cards-2col",
+        "value": "1024px"
+      },
+      {
+        "name": "show-stack",
+        "value": "960px"
+      },
+      {
+        "name": "single-col",
+        "value": "768px"
+      },
+      {
+        "name": "nav-collapse",
+        "value": "600px"
+      },
+      {
+        "name": "tight",
+        "value": "480px"
+      },
+      {
+        "name": "floor",
+        "value": "375px"
+      }
+    ],
+    "roundedMeta": {
+      "pill": {
+        "role": "pill",
+        "canonical": "999px",
+        "purpose": "Buttons, nav, tags, single-line inputs, badges, hamburger bars, scrollbar thumb."
+      },
+      "card": {
+        "canonical": "24px",
+        "purpose": "Cards, galleries, bio panels, ticket, embed cards."
+      },
+      "drawer": {
+        "canonical": "20px",
+        "purpose": "Mobile nav drawer."
+      },
+      "poster": {
+        "canonical": "18px",
+        "purpose": "The spotlit flyer in the /conexiones opening act."
+      },
+      "textarea": {
+        "canonical": "16px",
+        "purpose": "Multi-line textareas."
+      },
+      "inset": {
+        "canonical": "12px",
+        "purpose": "Media rounded inside a 24px card (Instagram embed inner)."
+      }
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Gold gradient pill with sheen sweep and zero-offset glow on hover; the one loud action per page.",
+      "html": "<button class=\"ds-btn-primary\">¡Adquiere tus entradas aquí!</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; border-radius: 999px; background: linear-gradient(135deg, #c9a84c, #e8c96a); color: #080808; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; border: none; white-space: nowrap; position: relative; overflow: hidden; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; } .ds-btn-primary::after { content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent); transition: left 0.5s ease; } .ds-btn-primary:hover { box-shadow: 0 0 28px rgba(201,168,76,0.5), 0 0 56px rgba(201,168,76,0.2); transform: translateY(-2px); } .ds-btn-primary:hover::after { left: 140%; } .ds-btn-primary:focus-visible { outline: 2px solid #e8c96a; outline-offset: 3px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Transparent gold-bordered pill for secondary actions.",
+      "html": "<button class=\"ds-btn-outline\">Ver Shows</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; gap: 8px; padding: 14px 32px; border-radius: 999px; background: transparent; color: #c9a84c; border: 1px solid #c9a84c; font-family: 'Montserrat', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; white-space: nowrap; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; } .ds-btn-outline:hover { background: rgba(201,168,76,0.1); box-shadow: 0 0 20px rgba(201,168,76,0.2); transform: translateY(-2px); } .ds-btn-outline:focus-visible { outline: 2px solid #e8c96a; outline-offset: 3px; }"
+    },
+    {
+      "name": "Section Tag",
+      "kind": "chip",
+      "refersTo": "section-tag",
+      "description": "Gold micro-label pill framing homepage section headers; optional (conexiones omits it).",
+      "html": "<span class=\"ds-section-tag\">Shows</span>",
+      "css": ".ds-section-tag { display: inline-block; font-family: 'Montserrat', sans-serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: #c9a84c; border: 1px solid rgba(201,168,76,0.3); padding: 5px 16px; border-radius: 999px; }"
+    },
+    {
+      "name": "Service Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "24px prop-black card with watermark numeral, gold stroke icon, and gold-hairline hover lift.",
+      "html": "<div class=\"ds-card\"><span class=\"ds-card-num\">01</span><span class=\"ds-card-icon\"><svg viewBox=\"0 0 24 24\" width=\"26\" height=\"26\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M15 4V2m0 20v-2m7-7h-2M4 13H2m17.07-6.07-1.41 1.41M6.34 19.66l-1.41 1.41m0-16.14 1.41 1.41m12.31 12.32 1.41 1.41\"/><path d=\"m13 7 4 4L7 21l-4-4Z\"/></svg></span><h3 class=\"ds-card-title\">Shows Privados</h3><p class=\"ds-card-desc\">Momentos íntimos y personalizados. Magia a centímetros de tus manos.</p></div>",
+      "css": ".ds-card { position: relative; background: #141414; border: 1px solid #2e2e2e; border-radius: 24px; padding: 40px 36px; overflow: hidden; max-width: 340px; font-family: 'Montserrat', sans-serif; transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease; } .ds-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.3); } .ds-card-num { position: absolute; top: 22px; right: 26px; font-size: 4.5rem; font-weight: 900; color: #c9a84c; opacity: 0.07; line-height: 1; letter-spacing: -0.04em; user-select: none; transition: opacity 0.35s ease; } .ds-card:hover .ds-card-num { opacity: 0.13; } .ds-card-icon { display: block; margin-bottom: 20px; line-height: 1; color: #c9a84c; } .ds-card-title { font-size: 1.05rem; font-weight: 700; color: #f0ece4; margin: 0 0 12px; letter-spacing: -0.01em; } .ds-card-desc { font-size: 0.88rem; font-weight: 300; color: rgba(240,236,228,0.6); line-height: 1.75; margin: 0; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "50px pill field on prop black with muted micro-label; gold halo focus.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-label\" for=\"ds-nombre\">Nombre</label><input class=\"ds-input\" id=\"ds-nombre\" type=\"text\" placeholder=\"Tu nombre\" /></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 8px; font-family: 'Montserrat', sans-serif; max-width: 340px; } .ds-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.13em; text-transform: uppercase; color: rgba(240,236,228,0.35); } .ds-input { background: #141414; border: 1px solid #2e2e2e; color: #f0ece4; font-family: inherit; font-size: 0.9rem; font-weight: 400; padding: 14px 20px; height: 50px; border-radius: 999px; outline: none; appearance: none; transition: border-color 0.25s ease, box-shadow 0.25s ease; } .ds-input::placeholder { color: #555555; } .ds-input:focus { border-color: rgba(201,168,76,0.5); box-shadow: 0 0 0 3px rgba(201,168,76,0.1); }"
+    },
+    {
+      "name": "Pill Navigation",
+      "kind": "nav",
+      "description": "Centered floating glass pill with gold hairline; active link sits on a gold-alpha pill.",
+      "html": "<nav class=\"ds-nav\"><span class=\"ds-nav-logo\">RG</span><span class=\"ds-nav-links\"><a href=\"#\" class=\"ds-nav-link\">Shows</a><a href=\"#\" class=\"ds-nav-link active\">Conexiones</a><a href=\"#\" class=\"ds-nav-link\">Clases</a><a href=\"#\" class=\"ds-nav-link\">Contacto</a></span></nav>",
+      "css": ".ds-nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; max-width: 680px; padding: 0.75rem 1.75rem; border-radius: 999px; background: rgba(17,17,17,0.75); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(201,168,76,0.15); font-family: 'Montserrat', sans-serif; } .ds-nav-logo { font-size: 1.1rem; font-weight: 900; letter-spacing: 0.08em; color: #c9a84c; text-transform: uppercase; } .ds-nav-links { display: flex; align-items: center; gap: 4px; } .ds-nav-link { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(240,236,228,0.6); padding: 6px 16px; border-radius: 999px; text-decoration: none; transition: all 0.25s ease; } .ds-nav-link:hover { color: #f0ece4; background: rgba(255,255,255,0.05); } .ds-nav-link.active { background: rgba(201,168,76,0.15); color: #e8c96a; }"
+    },
+    {
+      "name": "Social Button",
+      "kind": "button",
+      "refersTo": "social-button",
+      "description": "Quiet outline pill with inline SVG; warms to gold on hover.",
+      "html": "<a class=\"ds-social-btn\" href=\"#\"><svg viewBox=\"0 0 24 24\" width=\"15\" height=\"15\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0 3.675c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4z\"/></svg>Instagram</a>",
+      "css": ".ds-social-btn { display: inline-flex; align-items: center; gap: 9px; padding: 11px 22px; border-radius: 999px; border: 1px solid #2e2e2e; font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(240,236,228,0.6); background: transparent; text-decoration: none; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); } .ds-social-btn:hover { border-color: rgba(201,168,76,0.3); color: #e8c96a; background: rgba(201,168,76,0.1); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }"
+    },
+    {
+      "name": "Theater Ticket",
+      "kind": "custom",
+      "description": "Signature /conexiones object: 24px card split by a dashed gold rule with punched notches; event stubs left, price + CTA right.",
+      "html": "<div class=\"ds-ticket\"><div class=\"ds-ticket-data\"><div><span class=\"ds-stub-label\">Fecha</span><span class=\"ds-stub-value\">Sábado 29 de agosto</span></div><div><span class=\"ds-stub-label\">Lugar</span><span class=\"ds-stub-value\">Teatro Ocho</span></div></div><div class=\"ds-ticket-cta\"><span class=\"ds-ticket-price\">Desde Ref. 10 + fee</span><button class=\"ds-ticket-btn\">¡Adquiere tus entradas!</button></div></div>",
+      "css": ".ds-ticket { display: grid; grid-template-columns: 1.6fr 1fr; background: #141414; border: 1px solid rgba(201,168,76,0.3); border-radius: 24px; overflow: hidden; position: relative; font-family: 'Montserrat', sans-serif; max-width: 640px; } .ds-ticket-data { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 24px 36px; padding: 38px 44px; align-content: center; } .ds-stub-label { display: block; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: #c9a84c; margin-bottom: 5px; } .ds-stub-value { display: block; font-size: 0.98rem; font-weight: 700; color: #f0ece4; line-height: 1.35; } .ds-ticket-cta { position: relative; border-left: 1px dashed rgba(201,168,76,0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 40px 36px; text-align: center; } .ds-ticket-cta::before, .ds-ticket-cta::after { content: ''; position: absolute; left: -12px; width: 24px; height: 24px; border-radius: 50%; background: #080808; border: 1px solid rgba(201,168,76,0.3); } .ds-ticket-cta::before { top: -13px; } .ds-ticket-cta::after { bottom: -13px; } .ds-ticket-price { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #c9a84c; } .ds-ticket-btn { padding: 14px 28px; border-radius: 999px; background: linear-gradient(135deg, #c9a84c, #e8c96a); color: #080808; font-family: inherit; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; border: none; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); } .ds-ticket-btn:hover { box-shadow: 0 0 28px rgba(201,168,76,0.5); transform: translateY(-2px); }"
+    },
+    {
+      "name": "Event Ticker",
+      "kind": "custom",
+      "description": "Marquesina of event facts between gold hairlines; gold micro-caps with ✦ separators, linear loop, hover-pause.",
+      "html": "<div class=\"ds-ticker\"><div class=\"ds-ticker-track\"><div class=\"ds-ticker-items\"><span>Conexiones</span><i>✦</i><span>Sábado 29 de agosto</span><i>✦</i><span>Teatro Ocho · Las Mercedes</span><i>✦</i><span>Show 7:00 PM</span><i>✦</i></div><div class=\"ds-ticker-items\"><span>Conexiones</span><i>✦</i><span>Sábado 29 de agosto</span><i>✦</i><span>Teatro Ocho · Las Mercedes</span><i>✦</i><span>Show 7:00 PM</span><i>✦</i></div></div></div>",
+      "css": ".ds-ticker { border-top: 1px solid rgba(201,168,76,0.15); border-bottom: 1px solid rgba(201,168,76,0.15); background: #111111; overflow: hidden; padding: 15px 0; max-width: 100%; } .ds-ticker-track { display: flex; width: max-content; animation: dsTickerLeft 30s linear infinite; } .ds-ticker:hover .ds-ticker-track { animation-play-state: paused; } .ds-ticker-items { display: flex; align-items: center; white-space: nowrap; font-family: 'Montserrat', sans-serif; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: #c9a84c; } .ds-ticker-items i { font-style: normal; color: #a07830; padding: 0 26px; } @keyframes dsTickerLeft { from { transform: translateX(0); } to { transform: translateX(-50%); } } @media (prefers-reduced-motion: reduce) { .ds-ticker-track { animation: none; width: auto; } .ds-ticker-items:last-child { display: none; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Teatro a Oscuras (The Darkened Theater)",
+    "overview": "Every surface is a stage with the house lights off. The page background is near-black (#080808), and gold behaves like stage light, not paint: it appears as radial glows, hairline borders at alpha steps, thin gradient lines that fade to transparent, and tiny tracked-out labels. The subject of each page — a photograph, the show's flyer — is the performer; the interface frames and illuminates it without competing.\n\nThe voice alternates between two registers: an announcer's whisper (small 600-weight uppercase labels with very wide tracking, up to 0.34em) and a marquee shout (900-weight display type with negative tracking and sub-1 line-height). Body copy sits at a light 300 weight; the emotional voice — slogans, ledes, the show's hook — is 300 italic. Everything with a corner is soft: pills, 24px cards, 16px textareas.\n\nThe system is built for static single-file pages (embedded CSS/JS, no build step). Tokens are duplicated in each page's :root (/index.html and /conexiones/index.html) and must be kept byte-identical across files.\n\nDocumented exception: the Instagram embed in /conexiones (blockquote.instagram-media) is verbatim third-party markup — its Arial stack, 14px sizes, white/grey/blue palette, and 3-4px radii are outside the system and out of scope for audits; only the .ig-embed-card frame (24px card, 12px inset) is ours.",
+    "keyCharacteristics": [
+      "Near-black tonal stage; gold used as light (glow, hairline, label), never as a large painted surface",
+      "Two-register Montserrat: 900 tight display vs. 600 tiny wide-tracked uppercase labels; 300 body, 300 italic voice",
+      "Pill-everything shape language: 999px controls, 24px cards, 16px textareas, no sharp corners",
+      "Spring motion (cubic-bezier(0.16, 1, 0.3, 1)) for reveals and hovers; linear loops for marquees/tickers",
+      "The client artifact (photo, flyer) is always the brightest, most saturated thing on screen"
+    ],
+    "rules": [
+      {
+        "name": "The Gold-Is-Light Rule",
+        "body": "Gold arrives as illumination — radial glows, hairline alpha borders, 1px gradient lines fading to transparent, tiny labels, hover halos. The only solid gold fill on the site is the primary CTA's 135° gold→bright-gold gradient. Never paint a large surface opaque gold.",
+        "section": "colors"
+      },
+      {
+        "name": "The One-Loud-Color Rule",
+        "body": "The Conexiones flyer's red (and any client artwork color) belongs to the artwork, not the palette. Photography and flyers are the only saturated non-gold color on any page; the UI never adopts their hues.",
+        "section": "colors"
+      },
+      {
+        "name": "The Whisper/Shout Rule",
+        "body": "Only two voices exist above body size: the 900-weight negative-tracked shout and the tiny 600-weight wide-tracked uppercase whisper. Nothing lands in between — no 500-weight mid-size headings.",
+        "section": "typography"
+      },
+      {
+        "name": "The Hairline Rule",
+        "body": "Structure is drawn, not cast: every surface boundary is a 1px border or a tonal step. Shadows are reserved for state (hover, focus, scrolled) and for staging the client artifact.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep every page's :root token block identical across files — tokens are duplicated per single-file page and drift is a bug.",
+      "Do draw structure with 1px hairlines (grey at rest, gold-alpha for emphasis/hover) and tonal black steps; reserve shadows for state and for staging artifacts.",
+      "Do set all small functional text as 600-weight uppercase micro-labels with wide tracking (≥0.07em; 0.2em+ for tags/tickers/billing lines).",
+      "Do use --ease-spring for every reveal and hover transition, and linear timing only for infinite loops.",
+      "Do provide a prefers-reduced-motion fallback for every animation, including scroll-driven acts (static layout, visible content).",
+      "Do let client artwork (flyers, photos) be the only saturated, bright element in view; dim it (brightness filters, gradient scrims) only to protect text legibility.",
+      "Do end every page in exactly one primary action (gold gradient pill CTA)."
+    ],
+    "donts": [
+      "Don't introduce hues outside black/off-white/gold into UI chrome; artwork colors (the flyer's red) stay inside the artwork.",
+      "Don't use sharp corners anywhere in site chrome — pills for controls (999px), 24px for containers, 16px for textareas.",
+      "Don't use pure #fff or #000; text is Candlelight White #f0ece4 and the darkest surface is #080808.",
+      "Don't paint large surfaces solid gold; the CTA gradient is gold's only opaque fill.",
+      "Don't use unicode glyphs or emoji as component icons — inline stroke SVGs only. (The ✦ star is exempt: it is the brand ornament for dividers and ticker separators, not an icon.)",
+      "Don't add a second typeface; Montserrat 300–900 (+ italic) is a binding client commitment.",
+      "Don't treat the pill section-tag as mandatory framing — /conexiones ships without eyebrow pills and that restraint is part of its staging.",
+      "Don't imitate or canonize the Instagram embed's internal styles (Arial, 14px, #FFF/#F4F4F4/#3897f0/#c9c8cd, 3-4px radii) — third-party markup, out of scope."
+    ]
+  }
+}

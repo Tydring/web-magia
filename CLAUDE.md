@@ -231,9 +231,24 @@ Text-based names — no image files available:
 - Hero image preloaded; verified desktop 1440px and mobile 375px via Playwright, zero broken images.
 - On mobile the 8th Shows photo spans full width instead of sitting orphaned at half width.
 
+**Step 10 — /conexiones show page (2026-08-03)**
+- New nested page `conexiones/index.html` served at `rafaelgmagia.com/conexiones/` — standalone file with embedded CSS/JS duplicated+trimmed from the main page (tokens, reset, utilities, cursor, pill nav, social buttons, footer; no loader, no hero effects). Keep design tokens in sync with `index.html`.
+- Content: compact page hero ("Conexiones" + hook line), flyer (`img/conexiones-flyer.jpg`, portrait 960×1280) + synopsis 2-col grid, event-details card (Sáb 29 de agosto · Teatro Ocho, Las Mercedes · puertas 6 PM / show 7 PM · 12+), Ticketplate CTA (`https://bp.ticketplate.com/checkout/conexiones-202607311900/select/Gold`, "Entradas desde Ref. 10 + fee"), gold divider, Instagram reels section (1 official embed live: reel DYm2tfcuRST; embed.js lazy-injected via IntersectionObserver), final CTA band, footer.
+- All paths on the subpage are absolute from root (`/img/...`, `/#shows`). OG/Twitter meta with `img/conexiones-og.jpg` (1080×1080). Flyer sources live in `flyer-conexiones/`.
+- Main page: added "Conexiones" link to `.nav-links` + `#navDrawer` (nav-only; no homepage section, per Rafael).
+- `netlify.toml` CSP loosened for Instagram embeds only: `script-src`/`connect-src` +`www.instagram.com`, new `frame-src https://www.instagram.com`, `img-src` +instagram/cdninstagram.
+
+**Step 11 — /conexiones design overhaul "La cartelera" (2026-08-03)**
+- Full redesign of `conexiones/index.html` (client rejected the generic first pass): flyer-first cinematic opening — sticky 195vh act, flyer spotlit alone (gold radial light pools) that recedes/dims via scroll-progress CSS var `--ap` while the hook "¿Es posible leer lo que no se dice?" emerges; then gold event-data ticker (marquesina), giant display heading + italic lede, flyer+synopsis grid, **full-width perforated theater-ticket band** (2×2 data stubs + notched CTA half), reel embed, closing "¿Estás listo para conectar?".
+- No eyebrow/kicker pills on this page; headings self-carry. Cursor hidden until first mousemove. Reduced-motion collapses the opening to a static lit composition.
+- Impeccable artifacts: `PRODUCT.md` (product truth), `.impeccable/surfaces/conexiones-index-html.md` (surface brief), direction contract as first body comment in the page. `DESIGN.md` written by documenter from the built world.
+- Homepage audit findings queued for future overhaul (from detect.mjs): marquee animation, bounce easing (`--ease-spring` in keyframe animations), gold zero-offset glows, nav `transition: width`.
+
 ### 🔲 Remaining before launch
 - Contact forms submit via `mailto:` (opens the visitor's mail app). Wire Formspree or EmailJS for real delivery.
 - Logos 4–6 in the marquee still have generic `alt="Logo"`; get real names from Rafael.
+- Conexiones: reels 2 y 3 pendientes — two commented `.ig-embed-card` slots in `conexiones/index.html` (grep `TODO-PENDIENTE`).
+- Conexiones date note: client confirmed Sáb 29 de agosto is correct; the Ticketplate slug (`…202607311900`) is the ticketing site's own misnaming — link verified as the right event.
 
 ---
 

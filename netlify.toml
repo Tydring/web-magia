@@ -24,5 +24,6 @@
     # Restrict browser features (no camera, microphone, etc.)
     Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
 
-    # Upgrade insecure requests; allow Google Fonts and own origin only
-    Content-Security-Policy = "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none';"
+    # Allow Google Fonts + Instagram embeds (embed.js + iframes en
+    # /conexiones); todo lo demás restringido al propio origen
+    Content-Security-Policy = "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://www.instagram.com https://*.cdninstagram.com; script-src 'self' 'unsafe-inline' https://www.instagram.com; connect-src 'self' https://www.instagram.com; frame-src https://www.instagram.com; frame-ancestors 'none';"

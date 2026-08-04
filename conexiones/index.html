@@ -1,0 +1,1534 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <!-- ══════════════════════════════════════════════════════════
+         CONEXIONES — página del show (rafaelgmagia.com/conexiones)
+         Estilos compartidos duplicados de /index.html — mantener
+         los design tokens en sincronía si cambian allí.
+
+         TODO-PENDIENTE (pendiente del cliente):
+           1. Reels 2 y 3 de Instagram — hay 2 slots comentados en
+              #conexiones-reels listos para pegar más embeds
+              (buscar "TODO-PENDIENTE" en este archivo)
+         ══════════════════════════════════════════════════════════ -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Conexiones: show de magia y mentalismo de Rafael Gorrochotegui. Sábado 29 de agosto, 7:00 PM — Teatro Ocho, Las Mercedes, Caracas. ¡Adquiere tus entradas!"
+    />
+    <title>Conexiones | Rafael Gorrochotegui — Show de Magia y Mentalismo</title>
+    <link rel="canonical" href="https://rafaelgmagia.com/conexiones/" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23111111'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-family='Georgia,serif' font-weight='700' font-size='30' fill='%23c9a84c'%3ERG%3C/text%3E%3C/svg%3E"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Conexiones — Show de Magia y Mentalismo de Rafael Gorrochotegui"
+    />
+    <meta
+      property="og:description"
+      content="¿Es posible leer lo que no se dice? Sábado 29 de agosto, 7:00 PM — Teatro Ocho, Las Mercedes, Caracas."
+    />
+    <meta
+      property="og:image"
+      content="https://rafaelgmagia.com/img/conexiones-og.jpg"
+    />
+    <meta property="og:url" content="https://rafaelgmagia.com/conexiones/" />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preload" as="image" href="/img/conexiones-flyer.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ═══════════════════════════════════════════════════════
+           1. CSS CUSTOM PROPERTIES (compartido con /index.html)
+        ═══════════════════════════════════════════════════════ */
+      :root {
+        --c-black-deep: #080808;
+        --c-black-mid: #111111;
+        --c-black-light: #1a1a1a;
+        --c-black-card: #141414;
+        --c-grey-dark: #2a2a2a;
+        --c-grey-mid: #555555;
+        --c-grey-light: #888888;
+        --c-grey-border: #2e2e2e;
+        --c-off-white: #f0ece4;
+        --c-off-white-dim: rgba(240, 236, 228, 0.6);
+        --c-off-white-muted: rgba(240, 236, 228, 0.35);
+        --c-gold: #c9a84c;
+        --c-gold-bright: #e8c96a;
+        --c-gold-dim: #a07830;
+        --c-gold-alpha-10: rgba(201, 168, 76, 0.1);
+        --c-gold-alpha-15: rgba(201, 168, 76, 0.15);
+        --c-gold-alpha-20: rgba(201, 168, 76, 0.2);
+        --c-gold-alpha-30: rgba(201, 168, 76, 0.3);
+        --c-gold-alpha-50: rgba(201, 168, 76, 0.5);
+        --r-pill: 999px;
+        --r-card: 24px;
+        --r-textarea: 16px;
+        --font: "Montserrat", sans-serif;
+        --container: 1200px;
+        --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+        --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* ═══════════════════════════════════════════════════════
+           2. RESET (compartido con /index.html)
+        ═══════════════════════════════════════════════════════ */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+
+      body {
+        font-family: var(--font);
+        background-color: var(--c-black-deep);
+        color: var(--c-off-white);
+        line-height: 1.6;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        cursor: none; /* replaced by custom cursor on desktop */
+      }
+
+      @media (pointer: coarse) {
+        body {
+          cursor: auto;
+        }
+      }
+
+      img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      ul,
+      ol {
+        list-style: none;
+      }
+      button {
+        cursor: pointer;
+        border: none;
+        background: none;
+        font-family: var(--font);
+        color: inherit;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        line-height: 1.15;
+        font-weight: 700;
+      }
+      p {
+        line-height: 1.75;
+      }
+
+      ::-webkit-scrollbar {
+        width: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--c-black-mid);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--c-gold-dim);
+        border-radius: var(--r-pill);
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--c-gold);
+      }
+      ::selection {
+        background: var(--c-gold);
+        color: var(--c-black-deep);
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* ═══════════════════════════════════════════════════════
+           3. GLOBAL UTILITIES (compartido con /index.html)
+        ═══════════════════════════════════════════════════════ */
+      .container {
+        max-width: var(--container);
+        margin: 0 auto;
+        padding: 0 40px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        border-radius: var(--r-pill);
+        font-family: var(--font);
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        transition: all 0.3s var(--ease-spring);
+        cursor: pointer;
+        border: none;
+        white-space: nowrap;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--c-gold),
+          var(--c-gold-bright)
+        );
+        color: var(--c-black-deep);
+      }
+
+      .btn-primary::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.28),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .btn-primary:hover {
+        box-shadow:
+          0 0 28px var(--c-gold-alpha-50),
+          0 0 56px var(--c-gold-alpha-20);
+        transform: translateY(-2px);
+      }
+      .btn-primary:hover::after {
+        left: 140%;
+      }
+
+      .btn-lg {
+        padding: 16px 40px;
+        font-size: 0.88rem;
+      }
+
+      /* Fade-up animation base (IntersectionObserver) */
+      .fade-up {
+        opacity: 0;
+        transform: translateY(32px);
+        transition:
+          opacity 0.8s var(--ease-spring),
+          transform 0.8s var(--ease-spring);
+      }
+
+      .fade-up.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      main {
+        position: relative;
+      }
+
+      /* ═══════════════════════════════════════════════════════
+           4. CUSTOM CURSOR (compartido con /index.html)
+        ═══════════════════════════════════════════════════════ */
+      .cursor-dot,
+      .cursor-ring {
+        position: fixed;
+        pointer-events: none;
+        z-index: 99999;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        /* invisible hasta el primer movimiento del mouse */
+        visibility: hidden;
+      }
+
+      body.cursor-active .cursor-dot,
+      body.cursor-active .cursor-ring {
+        visibility: visible;
+      }
+
+      .cursor-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--c-gold);
+        transition:
+          width 0.2s,
+          height 0.2s,
+          opacity 0.2s;
+      }
+
+      .cursor-ring {
+        width: 36px;
+        height: 36px;
+        border: 1.5px solid rgba(201, 168, 76, 0.7);
+        transition:
+          width 0.3s var(--ease-spring),
+          height 0.3s var(--ease-spring),
+          border-color 0.3s;
+      }
+
+      .cursor-ring.ring-large {
+        width: 60px;
+        height: 60px;
+        border-color: var(--c-gold-bright);
+      }
+
+      .cursor-dot.dot-hidden {
+        opacity: 0;
+      }
+
+      @media (pointer: coarse) {
+        .cursor-dot,
+        .cursor-ring {
+          display: none;
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════
+           5. STICKY PILL NAVIGATION (compartido con /index.html)
+        ═══════════════════════════════════════════════════════ */
+      #navbar {
+        position: fixed;
+        top: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 8000;
+        max-width: 680px;
+        width: calc(100% - 3rem);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1.75rem;
+        border-radius: var(--r-pill);
+        background: rgba(17, 17, 17, 0.75);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border: 1px solid var(--c-gold-alpha-15);
+        transition:
+          background 0.3s ease,
+          border-color 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      #navbar.scrolled {
+        background: rgba(11, 11, 11, 0.92);
+        border-color: var(--c-gold-alpha-20);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      }
+
+      .nav-logo {
+        font-size: 1.1rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        color: var(--c-gold);
+        text-transform: uppercase;
+        flex-shrink: 0;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .nav-links a {
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--c-off-white-dim);
+        padding: 6px 16px;
+        border-radius: var(--r-pill);
+        transition: all 0.25s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--c-off-white);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .nav-links a.active {
+        background: var(--c-gold-alpha-15);
+        color: var(--c-gold-bright);
+      }
+
+      .nav-hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        padding: 6px;
+        cursor: pointer;
+      }
+
+      .nav-hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: var(--c-off-white);
+        border-radius: var(--r-pill);
+        transition: all 0.3s var(--ease-spring);
+      }
+
+      .nav-hamburger.open span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+      .nav-hamburger.open span:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+      }
+      .nav-hamburger.open span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+
+      .nav-drawer {
+        display: none;
+        position: absolute;
+        top: calc(100% + 12px);
+        left: 0;
+        right: 0;
+        background: rgba(14, 14, 14, 0.96);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--c-gold-alpha-15);
+        border-radius: 20px;
+        padding: 12px;
+        flex-direction: column;
+        gap: 4px;
+        transform-origin: top center;
+        opacity: 0;
+        transform: scaleY(0.9);
+        transition:
+          opacity 0.25s ease,
+          transform 0.25s var(--ease-spring);
+        pointer-events: none;
+      }
+
+      .nav-drawer.open {
+        opacity: 1;
+        transform: scaleY(1);
+        pointer-events: all;
+      }
+
+      .nav-drawer a {
+        font-size: 0.82rem;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--c-off-white-dim);
+        padding: 12px 20px;
+        border-radius: var(--r-pill);
+        display: block;
+        transition: all 0.2s ease;
+      }
+
+      .nav-drawer a:hover,
+      .nav-drawer a.active {
+        background: var(--c-gold-alpha-15);
+        color: var(--c-gold-bright);
+      }
+
+      @media (max-width: 600px) {
+        .nav-links {
+          display: none;
+        }
+        .nav-hamburger {
+          display: flex;
+        }
+        .nav-drawer {
+          display: flex;
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════
+           6. ACTO DE APERTURA — cartelera en penumbra
+           El flyer solo, iluminado como afiche de teatro. El
+           scroll (variable --ap 0→1) lo hace retroceder mientras
+           emerge la pregunta del show.
+        ═══════════════════════════════════════════════════════ */
+      #acto-apertura {
+        height: 195vh;
+        position: relative;
+      }
+
+      .apertura-stage {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: var(--c-black-deep);
+      }
+
+      /* el foco: luz que baña el afiche y muere cuando emerge la pregunta */
+      .apertura-stage::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse 64% 52% at 50% 6%,
+            rgba(201, 168, 76, 0.16),
+            transparent 62%
+          ),
+          radial-gradient(
+            ellipse 44% 42% at 50% 44%,
+            rgba(201, 168, 76, 0.1),
+            transparent 72%
+          ),
+          radial-gradient(
+            ellipse 34% 10% at 50% 90%,
+            rgba(201, 168, 76, 0.09),
+            transparent 78%
+          );
+        opacity: calc(1 - var(--ap, 0) * 1.2);
+        pointer-events: none;
+      }
+
+      .apertura-billing,
+      .apertura-flyer,
+      .apertura-hook,
+      .apertura-cue {
+        position: relative;
+        z-index: 1;
+      }
+
+      .apertura-billing {
+        font-size: 0.66rem;
+        font-weight: 600;
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+        color: var(--c-gold);
+        margin-bottom: 26px;
+        opacity: calc(1 - var(--ap, 0) * 2.4);
+      }
+
+      .apertura-flyer {
+        height: min(72vh, 72dvh);
+        width: auto;
+        max-width: 86vw;
+        border-radius: 18px;
+        border: 1px solid var(--c-gold-alpha-15);
+        box-shadow: 0 34px 90px -24px rgba(0, 0, 0, 0.85);
+        transform: scale(calc(1 - var(--ap, 0) * 0.08))
+          translateY(calc(var(--ap, 0) * -2.5vh));
+        filter: brightness(calc(1 - var(--ap, 0) * 0.72));
+        will-change: transform, filter;
+      }
+
+      .apertura-hook {
+        position: absolute;
+        left: 50%;
+        bottom: 13vh;
+        transform: translateX(-50%)
+          translateY(calc((1 - var(--ap, 0)) * 26px));
+        width: min(90vw, 620px);
+        text-align: center;
+        font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+        font-weight: 300;
+        font-style: italic;
+        line-height: 1.4;
+        color: var(--c-off-white);
+        opacity: calc((var(--ap, 0) - 0.38) * 2.4);
+        pointer-events: none;
+        text-shadow:
+          0 2px 26px rgba(0, 0, 0, 0.9),
+          0 1px 5px rgba(0, 0, 0, 0.85);
+      }
+
+      .apertura-hook em {
+        font-style: italic;
+        color: var(--c-gold-bright);
+      }
+
+      .apertura-cue {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        opacity: calc(1 - var(--ap, 0) * 3.2);
+      }
+
+      .apertura-cue span {
+        font-size: 0.6rem;
+        font-weight: 600;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--c-off-white-muted);
+      }
+
+      .apertura-cue::after {
+        content: "";
+        width: 1px;
+        height: 42px;
+        background: linear-gradient(
+          180deg,
+          var(--c-gold),
+          transparent
+        );
+      }
+
+      /* ═══════════════════════════════════════════════════════
+           7. TICKER — datos del evento en marquesina
+        ═══════════════════════════════════════════════════════ */
+      .ticker {
+        border-top: 1px solid var(--c-gold-alpha-15);
+        border-bottom: 1px solid var(--c-gold-alpha-15);
+        background: var(--c-black-mid);
+        overflow: hidden;
+        padding: 15px 0;
+        position: relative;
+        z-index: 2;
+      }
+
+      .ticker-track {
+        display: flex;
+        width: max-content;
+        animation: tickerLeft 30s linear infinite;
+      }
+
+      .ticker:hover .ticker-track {
+        animation-play-state: paused;
+      }
+
+      .ticker-items {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.26em;
+        text-transform: uppercase;
+        color: var(--c-gold);
+      }
+
+      .ticker-items i {
+        font-style: normal;
+        color: var(--c-gold-dim);
+        padding: 0 26px;
+      }
+
+      @keyframes tickerLeft {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════
+           8. EL SHOW — flyer de nuevo + toda la información
+        ═══════════════════════════════════════════════════════ */
+      #conexiones-show {
+        padding: 130px 0 110px;
+        position: relative;
+        z-index: 2;
+        background: var(--c-black-deep);
+      }
+
+      .show-display {
+        font-size: clamp(2.4rem, 11.5vw, 6rem);
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        line-height: 0.92;
+        text-transform: uppercase;
+        color: var(--c-off-white);
+        margin-bottom: 18px;
+      }
+
+      .show-display i {
+        font-style: normal;
+        color: var(--c-gold);
+      }
+
+      .show-lede {
+        font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+        font-weight: 300;
+        font-style: italic;
+        color: var(--c-off-white-dim);
+        max-width: 46ch;
+        line-height: 1.6;
+        margin-bottom: 72px;
+      }
+
+      .show-grid {
+        display: grid;
+        grid-template-columns: minmax(300px, 400px) 1fr;
+        gap: 72px;
+        align-items: start;
+      }
+
+      .show-flyer {
+        border-radius: var(--r-card);
+        overflow: hidden;
+        border: 1px solid var(--c-gold-alpha-20);
+        box-shadow: 0 28px 70px -18px rgba(0, 0, 0, 0.75);
+        transform: rotate(-1.2deg);
+        transition: transform 0.5s var(--ease-spring);
+      }
+
+      .show-flyer:hover {
+        transform: rotate(0deg) scale(1.015);
+      }
+
+      .show-flyer img {
+        width: 100%;
+      }
+
+      .show-synopsis p {
+        color: var(--c-off-white-dim);
+        font-weight: 300;
+        font-size: 1.02rem;
+        max-width: 58ch;
+        margin-bottom: 1.35em;
+      }
+
+      .show-synopsis p strong {
+        color: var(--c-off-white);
+        font-weight: 600;
+      }
+
+      /* ── La entrada: banda tipo boleto de teatro ── */
+      .ticket {
+        margin-top: 84px;
+        display: grid;
+        grid-template-columns: 1.9fr 1fr;
+        background: var(--c-black-card);
+        border: 1px solid var(--c-gold-alpha-30);
+        border-radius: var(--r-card);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .ticket-data {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px 36px;
+        padding: 38px 44px;
+        align-content: center;
+      }
+
+      @media (min-width: 961px) {
+        .stub-value {
+          white-space: nowrap;
+        }
+      }
+
+      .stub-label {
+        display: block;
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--c-gold);
+        margin-bottom: 5px;
+      }
+
+      .stub-value {
+        display: block;
+        font-size: 0.98rem;
+        font-weight: 700;
+        color: var(--c-off-white);
+        line-height: 1.35;
+      }
+
+      .ticket-cta {
+        position: relative;
+        border-left: 1px dashed var(--c-gold-alpha-30);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 40px 36px;
+        text-align: center;
+      }
+
+      /* muescas perforadas del boleto */
+      .ticket-cta::before,
+      .ticket-cta::after {
+        content: "";
+        position: absolute;
+        left: -12px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--c-black-deep);
+        border: 1px solid var(--c-gold-alpha-30);
+      }
+
+      .ticket-cta::before {
+        top: -13px;
+      }
+
+      .ticket-cta::after {
+        bottom: -13px;
+      }
+
+      .ticket-price {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--c-gold);
+      }
+
+      .cta-fine-print {
+        margin-top: 18px;
+        font-size: 0.72rem;
+        color: var(--c-off-white-muted);
+        text-align: right;
+      }
+
+      /* ═══════════════════════════════════════════════════════
+           9. EL SHOW EN ACCIÓN — reel de Instagram
+        ═══════════════════════════════════════════════════════ */
+      #conexiones-reels {
+        padding: 20px 0 72px;
+      }
+
+      .reels-heading {
+        font-size: clamp(1.9rem, 4.4vw, 3rem);
+        font-weight: 900;
+        letter-spacing: -0.025em;
+        text-align: center;
+        margin-bottom: 56px;
+      }
+
+      /* auto-fit + justify-content: con 1, 2 o 3 embeds la fila
+         siempre queda centrada */
+      .reels-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 380px));
+        justify-content: center;
+        gap: 24px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .ig-embed-card {
+        background: var(--c-black-card);
+        border: 1px solid var(--c-gold-alpha-20);
+        border-radius: var(--r-card);
+        padding: 14px;
+        overflow: hidden;
+        min-height: 480px;
+      }
+
+      .ig-embed-card .instagram-media {
+        margin: 0 auto !important;
+        min-width: 0 !important;
+        width: 100% !important;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      #conexiones-reels .social-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 48px;
+      }
+
+      .social-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 11px 22px;
+        border-radius: var(--r-pill);
+        border: 1px solid var(--c-grey-border);
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--c-off-white-dim);
+        background: transparent;
+        text-decoration: none;
+        transition: all 0.3s var(--ease-spring);
+      }
+
+      .social-btn:hover {
+        border-color: var(--c-gold-alpha-30);
+        color: var(--c-gold-bright);
+        background: var(--c-gold-alpha-10);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      }
+
+      .social-btn svg {
+        width: 15px;
+        height: 15px;
+        fill: currentColor;
+        flex-shrink: 0;
+      }
+
+      /* ═══════════════════════════════════════════════════════
+           10. CIERRE
+        ═══════════════════════════════════════════════════════ */
+      .final-cta {
+        text-align: center;
+        padding: 40px 0 120px;
+        background:
+          radial-gradient(
+            ellipse 55% 55% at 50% 100%,
+            rgba(201, 168, 76, 0.07),
+            transparent 70%
+          ),
+          var(--c-black-deep);
+      }
+
+      .final-cta h2 {
+        font-size: clamp(2.4rem, 6.5vw, 4.6rem);
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        margin-bottom: 14px;
+      }
+
+      .final-cta h2 i {
+        font-style: normal;
+        color: var(--c-gold);
+      }
+
+      .final-cta .ticket-price {
+        display: block;
+        margin-bottom: 26px;
+      }
+
+      /* ═══════════════════════════════════════════════════════
+           11. FOOTER (compartido con /index.html)
+        ═══════════════════════════════════════════════════════ */
+      #footer {
+        background: var(--c-black-mid);
+        border-top: 1px solid var(--c-grey-border);
+        padding: 64px 0 44px;
+        text-align: center;
+      }
+
+      .footer-name {
+        font-size: 1.05rem;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--c-gold);
+        margin-bottom: 8px;
+      }
+
+      .footer-location {
+        font-size: 0.7rem;
+        font-weight: 400;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--c-grey-mid);
+        margin-bottom: 16px;
+      }
+
+      .footer-email {
+        display: inline-block;
+        font-size: 0.85rem;
+        font-weight: 300;
+        color: var(--c-off-white-dim);
+        margin-bottom: 36px;
+        transition: color 0.25s ease;
+      }
+
+      .footer-email:hover {
+        color: var(--c-gold);
+      }
+
+      .footer-copy {
+        font-size: 0.66rem;
+        font-weight: 400;
+        letter-spacing: 0.1em;
+        color: var(--c-grey-mid);
+      }
+
+      /* ═══════════════════════════════════════════════════════
+           12. RESPONSIVE
+        ═══════════════════════════════════════════════════════ */
+      @media (max-width: 960px) {
+        .show-grid {
+          grid-template-columns: 1fr;
+          gap: 48px;
+        }
+        .show-flyer {
+          max-width: 400px;
+          margin: 0 auto;
+        }
+        .ticket {
+          grid-template-columns: 1fr;
+        }
+        .ticket-data {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .ticket-cta {
+          border-left: none;
+          border-top: 1px dashed var(--c-gold-alpha-30);
+        }
+        .ticket-cta::before {
+          top: -12px;
+          left: -13px;
+        }
+        .ticket-cta::after {
+          top: -12px;
+          bottom: auto;
+          left: auto;
+          right: -13px;
+        }
+        .cta-fine-print {
+          text-align: center;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 0 24px;
+        }
+        .apertura-flyer {
+          height: auto;
+          width: min(86vw, 400px);
+          max-height: 68vh;
+        }
+        .apertura-hook {
+          bottom: 10vh;
+        }
+        .ticket-data {
+          grid-template-columns: 1fr;
+          gap: 20px;
+          padding: 32px 28px;
+        }
+        .ticket-cta {
+          padding: 32px 24px;
+        }
+        .btn-lg {
+          padding: 15px 26px;
+          font-size: 0.78rem;
+          white-space: normal;
+          text-align: center;
+          line-height: 1.4;
+        }
+      }
+
+      /* ═══════════════════════════════════════════════════════
+           REDUCED MOTION
+        ═══════════════════════════════════════════════════════ */
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        .fade-up {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        #acto-apertura {
+          height: auto;
+        }
+        .apertura-stage {
+          position: static;
+          padding: 140px 0 80px;
+          height: auto;
+        }
+        .apertura-flyer {
+          transform: none;
+          filter: none;
+        }
+        .apertura-hook {
+          position: static;
+          transform: none;
+          opacity: 1;
+          margin-top: 40px;
+        }
+        .apertura-billing {
+          opacity: 1;
+        }
+        .apertura-cue {
+          display: none;
+        }
+        .ticker-track {
+          animation: none;
+          width: auto;
+        }
+        .ticker-items:last-child {
+          display: none;
+        }
+        .show-flyer {
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!--
+      THESIS: La cartelera — the show's own flyer, spotlit alone in the dark,
+      IS the page; it refuses the generic hero-title-plus-two-column brochure.
+      OWN-WORLD: near-black stage (#080808), gold #c9a84c as light not paint,
+      Montserrat 900 display / 300 italic voice, pill+24px shapes, one
+      perforated theater-ticket object; the flyer's red stays the only loud
+      color on the page.
+      STORY: visitor faces the poster → the question emerges → reads the
+      synopsis beside the poster → tears off the ticket → watches the reel →
+      answers "¿Estás listo para conectar?" with a purchase.
+      FIRST VIEWPORT: only the spotlit flyer centered at ~72vh under the
+      billing line "Rafael Gorrochotegui presenta"; scroll cue below; primary
+      action arrives with the ticket band after the synopsis.
+      FORM: client-pinned direction (flyer-first cinematic + scroll reveal);
+      pinned brief beats the concept roll, so no seed was rolled; staging:
+      sticky 195vh opening driven by --ap scroll variable.
+      FINISH: unreviewed and undocumented is unfinished; this build ends with
+      the finish review, the verdict, and DESIGN.md.
+    -->
+
+    <!-- ── CUSTOM CURSOR ── -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- ══════════════════════════════════════════
+         STICKY NAV
+    ══════════════════════════════════════════ -->
+    <nav id="navbar" aria-label="Navegación principal">
+      <a href="/" class="nav-logo">RG</a>
+
+      <ul class="nav-links">
+        <li><a href="/#shows">Shows</a></li>
+        <li><a href="/conexiones/" class="active">Conexiones</a></li>
+        <li><a href="/#clases">Clases</a></li>
+        <li><a href="/#shows-contact">Contacto</a></li>
+      </ul>
+
+      <button
+        class="nav-hamburger"
+        id="navHamburger"
+        aria-label="Menú"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="nav-drawer" id="navDrawer">
+        <a href="/#shows">Shows</a>
+        <a href="/conexiones/" class="active">Conexiones</a>
+        <a href="/#clases">Clases</a>
+        <a href="/#shows-contact">Contacto</a>
+      </div>
+    </nav>
+
+    <!-- ══════════════════════════════════════════
+         MAIN CONTENT
+    ══════════════════════════════════════════ -->
+    <main id="main-content">
+      <!-- 1. Acto de apertura: el flyer solo, en penumbra -->
+      <section id="acto-apertura" aria-label="Conexiones — apertura">
+        <div class="apertura-stage">
+          <p class="apertura-billing">Rafael Gorrochotegui presenta</p>
+          <img
+            class="apertura-flyer"
+            src="/img/conexiones-flyer.jpg"
+            alt="Flyer del show Conexiones — Rafael Gorrochotegui, sábado 29 de agosto, 7:00 PM, Teatro Ocho"
+            width="960"
+            height="1280"
+          />
+          <p class="apertura-hook" aria-hidden="true">
+            ¿Es posible leer <em>lo que no se dice</em>?
+          </p>
+          <div class="apertura-cue" aria-hidden="true">
+            <span>Desliza</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Marquesina con los datos del evento -->
+      <div class="ticker" aria-hidden="true">
+        <div class="ticker-track">
+          <div class="ticker-items">
+            <span>Conexiones</span><i>✦</i>
+            <span>Sábado 29 de agosto</span><i>✦</i>
+            <span>Teatro Ocho · Las Mercedes</span><i>✦</i>
+            <span>Show 7:00 PM</span><i>✦</i>
+            <span>Magia &amp; Mentalismo</span><i>✦</i>
+          </div>
+          <div class="ticker-items">
+            <span>Conexiones</span><i>✦</i>
+            <span>Sábado 29 de agosto</span><i>✦</i>
+            <span>Teatro Ocho · Las Mercedes</span><i>✦</i>
+            <span>Show 7:00 PM</span><i>✦</i>
+            <span>Magia &amp; Mentalismo</span><i>✦</i>
+          </div>
+        </div>
+      </div>
+      <p class="sr-only">
+        Conexiones — sábado 29 de agosto, Teatro Ocho, Las Mercedes, Caracas.
+        Show 7:00 PM. Magia y mentalismo.
+      </p>
+
+      <!-- 3. El show: flyer de nuevo + toda la información -->
+      <section id="conexiones-show">
+        <div class="container">
+          <h1 class="show-display fade-up">Conexiones<i>.</i></h1>
+          <p class="show-lede fade-up" data-delay="120">
+            Un viaje interactivo al centro de lo que nos hace humanos.
+          </p>
+
+          <div class="show-grid">
+            <div class="show-flyer fade-up">
+              <img
+                src="/img/conexiones-flyer.jpg"
+                alt="Flyer del show Conexiones"
+                width="960"
+                height="1280"
+                loading="lazy"
+              />
+            </div>
+
+            <div class="show-synopsis fade-up" data-delay="150">
+              <p>
+                Hay hilos invisibles que nos unen y decisiones que nos marcan.
+                <strong>&ldquo;Conexiones&rdquo;</strong> no es solo un show de
+                magia; es un viaje interactivo al centro de lo que nos hace
+                humanos.
+              </p>
+              <p>
+                De la mano del galardonado mentalista
+                <strong>Rafael Gorrochotegui</strong>, descubrirás que tus ojos
+                son realmente la ventana del alma y que el azar no existe.
+              </p>
+              <p>
+                Desde el misterio del tarot hasta la precisión matemática del
+                Cubo Rubik, esta experiencia de Producciones Dionisíacas te
+                invita a romper tus propias jaulas mentales.
+              </p>
+              <p>
+                Ven a vivir una inmersión total donde lo imposible se vuelve
+                real frente a tus ojos.
+              </p>
+            </div>
+          </div>
+
+          <!-- La entrada -->
+          <div class="ticket fade-up" data-delay="100">
+            <div class="ticket-data">
+              <div class="stub">
+                <span class="stub-label">Fecha</span>
+                <span class="stub-value">Sábado 29 de agosto</span>
+              </div>
+              <div class="stub">
+                <span class="stub-label">Lugar</span>
+                <span class="stub-value">Teatro Ocho, Las Mercedes</span>
+              </div>
+              <div class="stub">
+                <span class="stub-label">Puertas · Show</span>
+                <span class="stub-value">6:00 PM · 7:00 PM</span>
+              </div>
+              <div class="stub">
+                <span class="stub-label">Edad</span>
+                <span class="stub-value">Mayores de 12 años</span>
+              </div>
+            </div>
+            <div class="ticket-cta">
+              <span class="ticket-price">Desde Ref. 10 + fee</span>
+              <a
+                href="https://bp.ticketplate.com/checkout/conexiones-202607311900/select/Gold"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-primary btn-lg"
+                >¡Adquiere tus entradas aquí!</a
+              >
+            </div>
+          </div>
+          <p class="cta-fine-print">
+            Las ventas son definitivas. No se aceptan devoluciones ni
+            cambios.
+          </p>
+        </div>
+      </section>
+
+      <!-- 4. El show en acción -->
+      <section id="conexiones-reels">
+        <div class="container">
+          <h2 class="reels-heading fade-up">El show en acción</h2>
+
+          <!-- Embed oficial de Instagram. Para añadir más reels, duplicar
+               un .ig-embed-card (hay 2 slots comentados abajo). Si se
+               añaden después de que la página cargó, llamar
+               window.instgrm.Embeds.process() re-renderiza. -->
+          <div class="reels-grid">
+            <div class="ig-embed-card fade-up">
+              <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/DYm2tfcuRST/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);"><div style="padding:16px;"> <a href="https://www.instagram.com/reel/DYm2tfcuRST/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank"> <div style=" display: flex; flex-direction: row; align-items: center;"> <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div> <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;"> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div></div></div><div style="padding: 19% 0;"></div> <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg width="50px" height="50px" viewBox="0 0 60 60" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink"><g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g transform="translate(-511.000000, -20.000000)" fill="#000000"><g><path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"></path></g></g></g></svg></div><div style="padding-top: 8px;"> <div style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">View this post on Instagram</div></div><div style="padding: 12.5% 0;"></div> <div style="display: flex; flex-direction: row; margin-bottom: 14px; align-items: center;"><div> <div style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(0px) translateY(7px);"></div> <div style="background-color: #F4F4F4; height: 12.5px; transform: rotate(-45deg) translateX(3px) translateY(1px); width: 12.5px; flex-grow: 0; margin-right: 14px; margin-left: 2px;"></div> <div style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(9px) translateY(-18px);"></div></div><div style="margin-left: 8px;"> <div style=" background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 20px; width: 20px;"></div> <div style=" width: 0; height: 0; border-top: 2px solid transparent; border-left: 6px solid #f4f4f4; border-bottom: 2px solid transparent; transform: translateX(16px) translateY(-4px) rotate(30deg)"></div></div><div style="margin-left: auto;"> <div style=" width: 0px; border-top: 8px solid #F4F4F4; border-right: 8px solid transparent; transform: translateY(16px);"></div> <div style=" background-color: #F4F4F4; flex-grow: 0; height: 12px; width: 16px; transform: translateY(-4px);"></div> <div style=" width: 0; height: 0; border-top: 8px solid #F4F4F4; border-left: 8px solid transparent; transform: translateY(-4px) translateX(8px);"></div></div></div> <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center; margin-bottom: 24px;"> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 224px;"></div> <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 144px;"></div></div></a><p style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;"><a href="https://www.instagram.com/reel/DYm2tfcuRST/?utm_source=ig_embed&amp;utm_campaign=loading" style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px; text-decoration:none;" target="_blank">A post shared by Rafael Gorrochotegui (@rafaelgmagia)</a></p></div></blockquote>
+            </div>
+
+            <!-- TODO-PENDIENTE: slots para reels 2 y 3 — descomentar y pegar
+                 el embed oficial de Instagram dentro de cada card.
+            <div class="ig-embed-card fade-up" data-delay="120">
+              (pegar blockquote.instagram-media aquí)
+            </div>
+            <div class="ig-embed-card fade-up" data-delay="240">
+              (pegar blockquote.instagram-media aquí)
+            </div>
+            -->
+          </div>
+
+          <div class="social-row fade-up">
+            <a
+              href="https://instagram.com/rafaelgmagia"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-btn"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                />
+              </svg>
+              Instagram
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Cierre -->
+      <section class="final-cta" id="conexiones-cta">
+        <div class="container">
+          <h2 class="fade-up">¿Estás listo para <i>conectar</i>?</h2>
+          <span class="ticket-price fade-up" data-delay="100"
+            >Desde Ref. 10 + fee</span
+          >
+          <a
+            href="https://bp.ticketplate.com/checkout/conexiones-202607311900/select/Gold"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-primary btn-lg fade-up"
+            data-delay="200"
+            >¡Adquiere tus entradas aquí!</a
+          >
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer id="footer">
+        <div class="container">
+          <p class="footer-name">Rafael Gorrochotegui</p>
+          <p class="footer-location">Caracas, Venezuela</p>
+          <a href="mailto:rafaelgmagia@gmail.com" class="footer-email"
+            >rafaelgmagia@gmail.com</a
+          >
+          <p class="footer-copy">
+            © 2025 Rafael Gorrochotegui. Todos los derechos reservados.
+          </p>
+        </div>
+      </footer>
+    </main>
+
+    <!-- ══════════════════════════════════════════
+         JAVASCRIPT
+    ══════════════════════════════════════════ -->
+    <script>
+      /* ── CUSTOM CURSOR ──────────────────────── */
+      (function () {
+        if (window.matchMedia("(pointer: coarse)").matches) return;
+
+        const dot = document.getElementById("cursorDot");
+        const ring = document.getElementById("cursorRing");
+        if (!dot || !ring) return;
+        let mouseX = 0,
+          mouseY = 0;
+        let ringX = 0,
+          ringY = 0;
+
+        document.addEventListener("mousemove", (e) => {
+          if (!document.body.classList.contains("cursor-active")) {
+            document.body.classList.add("cursor-active");
+            ringX = e.clientX;
+            ringY = e.clientY;
+          }
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          dot.style.left = mouseX + "px";
+          dot.style.top = mouseY + "px";
+        });
+
+        (function animateRing() {
+          ringX += (mouseX - ringX) * 0.12;
+          ringY += (mouseY - ringY) * 0.12;
+          ring.style.left = ringX + "px";
+          ring.style.top = ringY + "px";
+          requestAnimationFrame(animateRing);
+        })();
+
+        document.addEventListener("mouseover", (e) => {
+          if (e.target.closest("a, button")) {
+            ring.classList.add("ring-large");
+            dot.classList.add("dot-hidden");
+          }
+        });
+
+        document.addEventListener("mouseout", (e) => {
+          if (e.target.closest("a, button")) {
+            ring.classList.remove("ring-large");
+            dot.classList.remove("dot-hidden");
+          }
+        });
+      })();
+
+      /* ── NAVBAR ─────────────────────────────── */
+      (function () {
+        const navbar = document.getElementById("navbar");
+        const hamburger = document.getElementById("navHamburger");
+        const drawer = document.getElementById("navDrawer");
+        if (!navbar || !hamburger || !drawer) return;
+
+        window.addEventListener(
+          "scroll",
+          () => {
+            navbar.classList.toggle("scrolled", window.scrollY > 40);
+          },
+          { passive: true },
+        );
+
+        hamburger.addEventListener("click", () => {
+          const isOpen = drawer.classList.toggle("open");
+          hamburger.classList.toggle("open", isOpen);
+          hamburger.setAttribute("aria-expanded", isOpen);
+        });
+
+        drawer.querySelectorAll("a").forEach((a) => {
+          a.addEventListener("click", () => {
+            drawer.classList.remove("open");
+            hamburger.classList.remove("open");
+            hamburger.setAttribute("aria-expanded", false);
+          });
+        });
+      })();
+
+      /* ── ACTO DE APERTURA (scroll → --ap) ───── */
+      /* La variable --ap (0→1) mide el progreso del scroll dentro de la
+         apertura pegajosa; el CSS la usa para encoger/atenuar el flyer y
+         revelar la pregunta. Con prefers-reduced-motion todo es estático. */
+      (function () {
+        const acto = document.getElementById("acto-apertura");
+        if (!acto) return;
+        if (
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        )
+          return;
+
+        let ticking = false;
+        function update() {
+          const range = acto.offsetHeight - window.innerHeight;
+          const top = acto.getBoundingClientRect().top;
+          const p =
+            range > 0 ? Math.min(1, Math.max(0, -top / range)) : 1;
+          acto.style.setProperty("--ap", p.toFixed(4));
+          ticking = false;
+        }
+
+        window.addEventListener(
+          "scroll",
+          () => {
+            if (!ticking) {
+              ticking = true;
+              requestAnimationFrame(update);
+            }
+          },
+          { passive: true },
+        );
+        window.addEventListener("resize", update, { passive: true });
+        update();
+      })();
+
+      /* ── INTERSECTION OBSERVER (fade-up) ───── */
+      (function () {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const el = entry.target;
+                const delay = el.dataset.delay || 0;
+                setTimeout(() => el.classList.add("visible"), +delay);
+                observer.unobserve(el);
+              }
+            });
+          },
+          { threshold: 0.12 },
+        );
+
+        document
+          .querySelectorAll(".fade-up")
+          .forEach((el) => observer.observe(el));
+      })();
+
+      /* ── INSTAGRAM EMBEDS (lazy) ────────────── */
+      /* Inyecta embed.js solo cuando la sección de reels se acerca al
+         viewport. Requiere el CSP de netlify.toml con instagram.com
+         permitido en script-src / frame-src. */
+      (function () {
+        const section = document.getElementById("conexiones-reels");
+        if (!section) return;
+        let loaded = false;
+
+        new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting || loaded) return;
+              loaded = true;
+              const s = document.createElement("script");
+              s.async = true;
+              s.src = "https://www.instagram.com/embed.js";
+              document.body.appendChild(s);
+              obs.disconnect();
+            });
+          },
+          { rootMargin: "400px" },
+        ).observe(section);
+      })();
+    </script>
+  </body>
+</html>
