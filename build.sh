@@ -1,23 +1,19 @@
 #!/usr/bin/env bash
-# Netlify build: static site (repo root) + conexiones-app export at /conexiones.
-# The exported app REPLACES the tracked conexiones/ page in the publish dir;
-# the old page stays in git. Rollback: remove [build] from netlify.toml.
+# Netlify build: static site + conexiones-app export at /conexiones.
+# Whitelist: solo lo que el sitio sirve. Los originales de camara, zips y
+# documentos del repo NO se publican (bajan el deploy de ~222MB a ~7MB).
+# Rollback del /conexiones nuevo: quitar el bloque [build] de netlify.toml.
 set -euo pipefail
 
 # 1. Build the Conexiones landing (static export, basePath /conexiones)
 (cd conexiones-app && npm ci && npm run build)
 
-# 2. Assemble the publish directory
+# 2. Assemble the publish directory (whitelist)
 rm -rf dist
 mkdir dist
-for entry in * .[!.]*; do
-  case "$entry" in
-    dist|conexiones-app|node_modules|.git|build.sh) continue ;;
-  esac
-  [ -e "$entry" ] || continue
-  cp -R "$entry" dist/
-done
+cp index.html dist/
+cp -R img dist/img
+cp -R js dist/js
 
-# 3. Swap in the app at /conexiones
-rm -rf dist/conexiones
+# 3. The app at /conexiones
 cp -R conexiones-app/out dist/conexiones
