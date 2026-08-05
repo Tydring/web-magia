@@ -11,6 +11,12 @@
         ],
         "createdAt": "2026-08-05T01:49:33.392Z",
         "reason": "Cliente pidio acento rojo del show (flyer) para conexiones-app; DESIGN.md dorado rige solo el sitio principal"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "10rem",
+        "createdAt": "2026-08-05T02:03:11.543Z",
+        "reason": "Titulo hero a escala de poster (lockup oficial del show), pedido del cliente para conexiones-app"
       }
     ]
   }
