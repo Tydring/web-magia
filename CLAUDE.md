@@ -244,6 +244,14 @@ Text-based names — no image files available:
 - Impeccable artifacts: `PRODUCT.md` (product truth), `.impeccable/surfaces/conexiones-index-html.md` (surface brief), direction contract as first body comment in the page. `DESIGN.md` written by documenter from the built world.
 - Homepage audit findings queued for future overhaul (from detect.mjs): marquee animation, bounce easing (`--ease-spring` in keyframe animations), gold zero-offset glows, nav `transition: width`.
 
+**Step 12 — /conexiones v2 "El escenario": WebGL 3D opening act (2026-08-04)**
+- Client rejected the flat v1 opening as too generic (wanted real 3D, near award-site level). Rebuilt the opening act as a WebGL theater stage using **self-hosted three.js r149 UMD at `js/three.min.js`** (MIT; CSP untouched — script-src stays 'self').
+- Scene: fog-black stage, flyer as floating textured plane (mouse tilt + idle float), fresnel-shader gold spotlight cone (soft edges), feathered gold floor pool with a live mirrored reflection of the flyer, gold halo behind the flyer, procedural canvas textures only (no asset files): drifting smoke billboards, fine pale dust in the beam, sparse large gold embers.
+- Choreography: sticky 260vh act; scroll `--ap` drives an aspect-aware camera dolly (flyer ≤76% of view width at any aspect, baseZ→2.6 through the poster), light dims to black as the hook line emerges, canvas fades and rendering pauses off-screen/hidden tab. Mobile: lower DPR, fewer particles, autonomous camera sway.
+- Curtain loader ("CONEXIONES" + gold sweep), lifts on flyer-texture ready, 3.5s failsafe, JS-gated.
+- Progressive enhancement: DOM `<img>` flyer + CSS light pools are the default; `body.stage-3d` swaps in the canvas only on successful WebGL init. Reduced-motion: no scene, static lit composition.
+- Content sections below the act unchanged from v1.1 (ticker, synopsis grid, ticket band, reel, close).
+
 ### 🔲 Remaining before launch
 - Contact forms submit via `mailto:` (opens the visitor's mail app). Wire Formspree or EmailJS for real delivery.
 - Logos 4–6 in the marquee still have generic `alt="Logo"`; get real names from Rafael.

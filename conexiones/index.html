@@ -43,6 +43,7 @@
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="preload" as="image" href="/img/conexiones-flyer.jpg" />
+    <script defer src="/js/three.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -477,14 +478,94 @@
       }
 
       /* ═══════════════════════════════════════════════════════
-           6. ACTO DE APERTURA — cartelera en penumbra
-           El flyer solo, iluminado como afiche de teatro. El
-           scroll (variable --ap 0→1) lo hace retroceder mientras
-           emerge la pregunta del show.
+           6. ACTO DE APERTURA — el escenario
+           WebGL: humo volumétrico, haz de foco con polvo, el flyer
+           flotando. El scroll (--ap 0→1) hace un dolly de cámara a
+           través de la escena mientras emerge la pregunta. Sin
+           WebGL/JS/motion: composición estática iluminada (el img).
         ═══════════════════════════════════════════════════════ */
+
+      /* Telón de carga (visible solo con html.curtain-on, puesto por JS) */
+      #curtain {
+        position: fixed;
+        inset: 0;
+        z-index: 9500;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 26px;
+        background: var(--c-black-deep);
+        opacity: 1;
+        transition: opacity 0.7s ease, visibility 0.7s;
+      }
+
+      html.curtain-on #curtain {
+        display: flex;
+      }
+
+      html.curtain-off #curtain {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .curtain-title {
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.5em;
+        text-transform: uppercase;
+        color: var(--c-gold);
+        padding-left: 0.5em; /* compensa el tracking del último glifo */
+      }
+
+      .curtain-bar {
+        width: min(220px, 50vw);
+        height: 1px;
+        background: var(--c-gold-alpha-15);
+        overflow: hidden;
+        border-radius: var(--r-pill);
+      }
+
+      .curtain-bar span {
+        display: block;
+        height: 100%;
+        width: 40%;
+        background: linear-gradient(90deg, transparent, var(--c-gold), transparent);
+        animation: curtainSweep 1.1s ease-in-out infinite;
+      }
+
+      @keyframes curtainSweep {
+        from {
+          transform: translateX(-120%);
+        }
+        to {
+          transform: translateX(320%);
+        }
+      }
+
       #acto-apertura {
-        height: 195vh;
+        height: 210vh;
         position: relative;
+      }
+
+      /* Canvas del escenario: oculto hasta que WebGL inicializa */
+      #stage3d {
+        display: none;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: calc(1 - max(0, var(--ap, 0) - 0.86) * 7.2);
+      }
+
+      body.stage-3d #stage3d {
+        display: block;
+      }
+
+      /* con WebGL activo el afiche DOM se apaga */
+      body.stage-3d .apertura-flyer {
+        display: none;
       }
 
       .apertura-stage {
@@ -500,53 +581,16 @@
         background: var(--c-black-deep);
       }
 
-      /* el foco: luz que baña el afiche y muere cuando emerge la pregunta */
-      .apertura-stage::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          radial-gradient(
-            ellipse 64% 52% at 50% 6%,
-            rgba(201, 168, 76, 0.16),
-            transparent 62%
-          ),
-          radial-gradient(
-            ellipse 44% 42% at 50% 44%,
-            rgba(201, 168, 76, 0.1),
-            transparent 72%
-          ),
-          radial-gradient(
-            ellipse 34% 10% at 50% 90%,
-            rgba(201, 168, 76, 0.09),
-            transparent 78%
-          );
-        opacity: calc(1 - var(--ap, 0) * 1.2);
-        pointer-events: none;
-      }
-
-      .apertura-billing,
       .apertura-flyer,
-      .apertura-hook,
       .apertura-cue {
         position: relative;
         z-index: 1;
       }
 
-      .apertura-billing {
-        font-size: 0.66rem;
-        font-weight: 600;
-        letter-spacing: 0.34em;
-        text-transform: uppercase;
-        color: var(--c-gold);
-        margin-bottom: 26px;
-        opacity: calc(1 - var(--ap, 0) * 2.4);
-      }
-
       .apertura-flyer {
-        height: min(72vh, 72dvh);
+        height: min(80vh, 80dvh);
         width: auto;
-        max-width: 86vw;
+        max-width: 88vw;
         border-radius: 18px;
         border: 1px solid var(--c-gold-alpha-15);
         box-shadow: 0 34px 90px -24px rgba(0, 0, 0, 0.85);
@@ -554,31 +598,6 @@
           translateY(calc(var(--ap, 0) * -2.5vh));
         filter: brightness(calc(1 - var(--ap, 0) * 0.72));
         will-change: transform, filter;
-      }
-
-      .apertura-hook {
-        position: absolute;
-        left: 50%;
-        bottom: 13vh;
-        transform: translateX(-50%)
-          translateY(calc((1 - var(--ap, 0)) * 26px));
-        width: min(90vw, 620px);
-        text-align: center;
-        font-size: clamp(1.35rem, 2.6vw, 1.9rem);
-        font-weight: 300;
-        font-style: italic;
-        line-height: 1.4;
-        color: var(--c-off-white);
-        opacity: calc((var(--ap, 0) - 0.38) * 2.4);
-        pointer-events: none;
-        text-shadow:
-          0 2px 26px rgba(0, 0, 0, 0.9),
-          0 1px 5px rgba(0, 0, 0, 0.85);
-      }
-
-      .apertura-hook em {
-        font-style: italic;
-        color: var(--c-gold-bright);
       }
 
       .apertura-cue {
@@ -598,7 +617,10 @@
         font-weight: 600;
         letter-spacing: 0.3em;
         text-transform: uppercase;
-        color: var(--c-off-white-muted);
+        color: var(--c-off-white-dim);
+        text-shadow:
+          0 1px 10px rgba(0, 0, 0, 0.95),
+          0 0 3px rgba(0, 0, 0, 0.9);
       }
 
       .apertura-cue::after {
@@ -613,56 +635,7 @@
       }
 
       /* ═══════════════════════════════════════════════════════
-           7. TICKER — datos del evento en marquesina
-        ═══════════════════════════════════════════════════════ */
-      .ticker {
-        border-top: 1px solid var(--c-gold-alpha-15);
-        border-bottom: 1px solid var(--c-gold-alpha-15);
-        background: var(--c-black-mid);
-        overflow: hidden;
-        padding: 15px 0;
-        position: relative;
-        z-index: 2;
-      }
-
-      .ticker-track {
-        display: flex;
-        width: max-content;
-        animation: tickerLeft 30s linear infinite;
-      }
-
-      .ticker:hover .ticker-track {
-        animation-play-state: paused;
-      }
-
-      .ticker-items {
-        display: flex;
-        align-items: center;
-        white-space: nowrap;
-        font-size: 0.72rem;
-        font-weight: 600;
-        letter-spacing: 0.26em;
-        text-transform: uppercase;
-        color: var(--c-gold);
-      }
-
-      .ticker-items i {
-        font-style: normal;
-        color: var(--c-gold-dim);
-        padding: 0 26px;
-      }
-
-      @keyframes tickerLeft {
-        from {
-          transform: translateX(0);
-        }
-        to {
-          transform: translateX(-50%);
-        }
-      }
-
-      /* ═══════════════════════════════════════════════════════
-           8. EL SHOW — flyer de nuevo + toda la información
+           7. EL SHOW — flyer de nuevo + toda la información
         ═══════════════════════════════════════════════════════ */
       #conexiones-show {
         padding: 130px 0 110px;
@@ -826,29 +799,45 @@
       }
 
       /* ═══════════════════════════════════════════════════════
-           9. EL SHOW EN ACCIÓN — reel de Instagram
+           8. EL SHOW EN ACCIÓN — intro + reel lado a lado
         ═══════════════════════════════════════════════════════ */
       #conexiones-reels {
         padding: 20px 0 72px;
       }
 
-      .reels-heading {
+      .reels-duo {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, 400px);
+        gap: 72px;
+        align-items: center;
+      }
+
+      .reels-intro .reels-heading {
         font-size: clamp(1.9rem, 4.4vw, 3rem);
         font-weight: 900;
         letter-spacing: -0.025em;
-        text-align: center;
-        margin-bottom: 56px;
+        margin-bottom: 18px;
       }
 
-      /* auto-fit + justify-content: con 1, 2 o 3 embeds la fila
-         siempre queda centrada */
+      .reels-line {
+        font-size: 1.02rem;
+        font-weight: 300;
+        color: var(--c-off-white-dim);
+        max-width: 44ch;
+        margin-bottom: 32px;
+      }
+
+      .reels-intro .social-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      /* con más reels, las cards se apilan en la columna derecha */
       .reels-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 380px));
-        justify-content: center;
+        grid-template-columns: 1fr;
         gap: 24px;
-        max-width: 1100px;
-        margin: 0 auto;
       }
 
       .ig-embed-card {
@@ -868,14 +857,6 @@
         overflow: hidden;
       }
 
-      #conexiones-reels .social-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        flex-wrap: wrap;
-        margin-top: 48px;
-      }
 
       .social-btn {
         display: inline-flex;
@@ -1024,6 +1005,25 @@
         .cta-fine-print {
           text-align: center;
         }
+        .reels-duo {
+          grid-template-columns: 1fr;
+          gap: 40px;
+        }
+        .reels-grid {
+          max-width: 420px;
+          width: 100%;
+          margin: 0 auto;
+        }
+        .reels-intro {
+          text-align: center;
+        }
+        .reels-line {
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .reels-intro .social-row {
+          justify-content: center;
+        }
       }
 
       @media (max-width: 480px) {
@@ -1032,11 +1032,8 @@
         }
         .apertura-flyer {
           height: auto;
-          width: min(86vw, 400px);
-          max-height: 68vh;
-        }
-        .apertura-hook {
-          bottom: 10vh;
+          width: min(88vw, 420px);
+          max-height: 74vh;
         }
         .ticket-data {
           grid-template-columns: 1fr;
@@ -1067,6 +1064,14 @@
           transform: none;
           transition: none;
         }
+        #curtain,
+        #stage3d,
+        body.stage-3d #stage3d {
+          display: none;
+        }
+        body.stage-3d .apertura-flyer {
+          display: block;
+        }
         #acto-apertura {
           height: auto;
         }
@@ -1079,23 +1084,7 @@
           transform: none;
           filter: none;
         }
-        .apertura-hook {
-          position: static;
-          transform: none;
-          opacity: 1;
-          margin-top: 40px;
-        }
-        .apertura-billing {
-          opacity: 1;
-        }
         .apertura-cue {
-          display: none;
-        }
-        .ticker-track {
-          animation: none;
-          width: auto;
-        }
-        .ticker-items:last-child {
           display: none;
         }
         .show-flyer {
@@ -1107,28 +1096,42 @@
 
   <body>
     <!--
-      THESIS: La cartelera — the show's own flyer, spotlit alone in the dark,
-      IS the page; it refuses the generic hero-title-plus-two-column brochure.
-      OWN-WORLD: near-black stage (#080808), gold #c9a84c as light not paint,
-      Montserrat 900 display / 300 italic voice, pill+24px shapes, one
-      perforated theater-ticket object; the flyer's red stays the only loud
-      color on the page.
-      STORY: visitor faces the poster → the question emerges → reads the
-      synopsis beside the poster → tears off the ticket → watches the reel →
-      answers "¿Estás listo para conectar?" with a purchase.
-      FIRST VIEWPORT: only the spotlit flyer centered at ~72vh under the
-      billing line "Rafael Gorrochotegui presenta"; scroll cue below; primary
-      action arrives with the ticket band after the synopsis.
-      FORM: client-pinned direction (flyer-first cinematic + scroll reveal);
-      pinned brief beats the concept roll, so no seed was rolled; staging:
-      sticky 195vh opening driven by --ap scroll variable.
+      THESIS: El escenario — the flyer itself, huge and floating in a dark
+      3D space of smoke and gold embers; no spotlight fixture, no framing
+      copy — the artwork alone carries the opening.
+      OWN-WORLD: near-black stage (#080808), gold #c9a84c as accents of
+      light — embers, halo, floor reflection — never paint; Montserrat 900
+      display / 300 italic voice; pill+24px shapes; perforated ticket
+      object; the flyer's red stays the only loud color.
+      STORY: curtain → the flyer floats immense in the smoke → the camera
+      dollies through and the stage goes black → synopsis beside the flyer
+      → ticket → reel beside its intro → "¿Estás listo para conectar?".
+      FIRST VIEWPORT: full-bleed 3D stage, only the flyer (~88% of view
+      height) floating center with smoke, dust and embers; scroll cue
+      below; primary action still arrives with the ticket band.
+      FORM: client-pinned round 2 (client removed: spotlight beam+pool,
+      billing line, hook question, event ticker; kept 3D, smoke, gold
+      particles; flyer enlarged) — pinned brief beats the concept roll,
+      corroborated in-session. Staging: sticky 210vh act, three.js r149
+      self-hosted, camera dolly + dim driven by --ap; DOM flyer is the
+      default and WebGL replaces it only on successful init (body.stage-3d).
       FINISH: unreviewed and undocumented is unfinished; this build ends with
       the finish review, the verdict, and DESIGN.md.
     -->
+    <script>
+      /* marca temprana: el telón solo existe si hay JS */
+      document.documentElement.classList.add("js", "curtain-on");
+    </script>
 
     <!-- ── CUSTOM CURSOR ── -->
     <div class="cursor-dot" id="cursorDot"></div>
     <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- ── TELÓN (curtain loader, visible solo con JS) ── -->
+    <div id="curtain" role="status" aria-label="Cargando">
+      <p class="curtain-title">Conexiones</p>
+      <div class="curtain-bar"><span></span></div>
+    </div>
 
     <!-- ══════════════════════════════════════════
          STICKY NAV
@@ -1166,10 +1169,12 @@
          MAIN CONTENT
     ══════════════════════════════════════════ -->
     <main id="main-content">
-      <!-- 1. Acto de apertura: el flyer solo, en penumbra -->
+      <!-- 1. Acto de apertura: escenario 3D — humo, foco y el flyer
+           flotando. El <img> es el estado por defecto (sin JS / sin WebGL /
+           reduced motion); body.stage-3d lo oculta y muestra el canvas. -->
       <section id="acto-apertura" aria-label="Conexiones — apertura">
         <div class="apertura-stage">
-          <p class="apertura-billing">Rafael Gorrochotegui presenta</p>
+          <canvas id="stage3d" aria-hidden="true"></canvas>
           <img
             class="apertura-flyer"
             src="/img/conexiones-flyer.jpg"
@@ -1177,38 +1182,11 @@
             width="960"
             height="1280"
           />
-          <p class="apertura-hook" aria-hidden="true">
-            ¿Es posible leer <em>lo que no se dice</em>?
-          </p>
           <div class="apertura-cue" aria-hidden="true">
             <span>Desliza</span>
           </div>
         </div>
       </section>
-
-      <!-- 2. Marquesina con los datos del evento -->
-      <div class="ticker" aria-hidden="true">
-        <div class="ticker-track">
-          <div class="ticker-items">
-            <span>Conexiones</span><i>✦</i>
-            <span>Sábado 29 de agosto</span><i>✦</i>
-            <span>Teatro Ocho · Las Mercedes</span><i>✦</i>
-            <span>Show 7:00 PM</span><i>✦</i>
-            <span>Magia &amp; Mentalismo</span><i>✦</i>
-          </div>
-          <div class="ticker-items">
-            <span>Conexiones</span><i>✦</i>
-            <span>Sábado 29 de agosto</span><i>✦</i>
-            <span>Teatro Ocho · Las Mercedes</span><i>✦</i>
-            <span>Show 7:00 PM</span><i>✦</i>
-            <span>Magia &amp; Mentalismo</span><i>✦</i>
-          </div>
-        </div>
-      </div>
-      <p class="sr-only">
-        Conexiones — sábado 29 de agosto, Teatro Ocho, Las Mercedes, Caracas.
-        Show 7:00 PM. Magia y mentalismo.
-      </p>
 
       <!-- 3. El show: flyer de nuevo + toda la información -->
       <section id="conexiones-show">
@@ -1291,10 +1269,31 @@
         </div>
       </section>
 
-      <!-- 4. El show en acción -->
+      <!-- 4. El show en acción: intro + reel lado a lado -->
       <section id="conexiones-reels">
-        <div class="container">
-          <h2 class="reels-heading fade-up">El show en acción</h2>
+        <div class="container reels-duo">
+          <div class="reels-intro fade-up">
+            <h2 class="reels-heading">El show en acción</h2>
+            <p class="reels-line">
+              Un adelanto de lo que se vive en escena. Sigue a
+              Rafael para más momentos del show.
+            </p>
+            <div class="social-row">
+              <a
+                href="https://instagram.com/rafaelgmagia"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="social-btn"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                  />
+                </svg>
+                @rafaelgmagia
+              </a>
+            </div>
+          </div>
 
           <!-- Embed oficial de Instagram. Para añadir más reels, duplicar
                un .ig-embed-card (hay 2 slots comentados abajo). Si se
@@ -1314,22 +1313,6 @@
               (pegar blockquote.instagram-media aquí)
             </div>
             -->
-          </div>
-
-          <div class="social-row fade-up">
-            <a
-              href="https://instagram.com/rafaelgmagia"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="social-btn"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-                />
-              </svg>
-              Instagram
-            </a>
           </div>
         </div>
       </section>
@@ -1467,6 +1450,7 @@
           const p =
             range > 0 ? Math.min(1, Math.max(0, -top / range)) : 1;
           acto.style.setProperty("--ap", p.toFixed(4));
+          window.__ap = p; // consumido por la escena WebGL
           ticking = false;
         }
 
@@ -1503,6 +1487,331 @@
         document
           .querySelectorAll(".fade-up")
           .forEach((el) => observer.observe(el));
+      })();
+
+      /* ── EL ESCENARIO (WebGL, three.js r149 self-hosted) ── */
+      /* Humo volumétrico + haz de foco con polvo + brasas doradas + el
+         flyer flotando. El DOM <img> es el estado por defecto; solo si
+         WebGL inicializa se añade body.stage-3d y el canvas toma el
+         relevo. El scroll (window.__ap) hace el dolly de cámara y apaga
+         la luz mientras emerge la pregunta. */
+      (function () {
+        const curtainOff = () => {
+          document.documentElement.classList.remove("curtain-on");
+          document.documentElement.classList.add("curtain-off");
+        };
+        // pase lo que pase, el telón nunca se queda puesto
+        const curtainTimeout = setTimeout(curtainOff, 3500);
+
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          clearTimeout(curtainTimeout);
+          curtainOff();
+          return;
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+          const canvas = document.getElementById("stage3d");
+          const acto = document.getElementById("acto-apertura");
+          if (!canvas || !acto || typeof THREE === "undefined") {
+            clearTimeout(curtainTimeout);
+            curtainOff();
+            return;
+          }
+
+          let renderer;
+          try {
+            renderer = new THREE.WebGLRenderer({
+              canvas,
+              antialias: false,
+              alpha: false,
+              powerPreference: "high-performance",
+            });
+          } catch (e) {
+            clearTimeout(curtainTimeout);
+            curtainOff();
+            return;
+          }
+
+          const isCoarse = window.matchMedia("(pointer: coarse)").matches;
+          const DPR = Math.min(window.devicePixelRatio || 1, isCoarse ? 1.5 : 2);
+          renderer.setPixelRatio(DPR);
+          renderer.setClearColor(0x080808, 1);
+
+          const scene = new THREE.Scene();
+          scene.fog = new THREE.FogExp2(0x060606, 0.07);
+
+          const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 60);
+          camera.position.set(0, 0.1, 8);
+
+          /* ── texturas procedurales (sin assets externos) ── */
+          function dotTexture() {
+            const c = document.createElement("canvas");
+            c.width = c.height = 64;
+            const g = c.getContext("2d");
+            const grad = g.createRadialGradient(32, 32, 0, 32, 32, 30);
+            grad.addColorStop(0, "rgba(255,255,255,1)");
+            grad.addColorStop(0.4, "rgba(255,255,255,0.45)");
+            grad.addColorStop(1, "rgba(255,255,255,0)");
+            g.fillStyle = grad;
+            g.fillRect(0, 0, 64, 64);
+            return new THREE.CanvasTexture(c);
+          }
+
+          function smokeTexture() {
+            const c = document.createElement("canvas");
+            c.width = c.height = 256;
+            const g = c.getContext("2d");
+            for (let i = 0; i < 54; i++) {
+              const x = 40 + Math.random() * 176;
+              const y = 40 + Math.random() * 176;
+              const r = 22 + Math.random() * 58;
+              const a = 0.028 + Math.random() * 0.05;
+              const grad = g.createRadialGradient(x, y, 0, x, y, r);
+              grad.addColorStop(0, "rgba(255,255,255," + a + ")");
+              grad.addColorStop(1, "rgba(255,255,255,0)");
+              g.fillStyle = grad;
+              g.fillRect(0, 0, 256, 256);
+            }
+            return new THREE.CanvasTexture(c);
+          }
+
+          /* ── el flyer flotando ── */
+          const flyerGroup = new THREE.Group();
+          scene.add(flyerGroup);
+          let reflMesh = null;
+          const loader = new THREE.TextureLoader();
+          let sceneReady = false;
+          loader.load(
+            "/img/conexiones-flyer.jpg",
+            (tex) => {
+              tex.colorSpace = THREE.SRGBColorSpace;
+              const mat = new THREE.MeshBasicMaterial({ map: tex });
+              const flyer = new THREE.Mesh(
+                new THREE.PlaneGeometry(3, 4),
+                mat,
+              );
+              flyerGroup.add(flyer);
+
+              /* halo dorado detrás del afiche: la luz lo abraza */
+              const halo = new THREE.Mesh(
+                new THREE.PlaneGeometry(4.6, 5.9),
+                new THREE.MeshBasicMaterial({
+                  color: 0xc9a84c,
+                  alphaMap: dot,
+                  transparent: true,
+                  opacity: 0.13,
+                  blending: THREE.AdditiveBlending,
+                  depthWrite: false,
+                }),
+              );
+              halo.position.z = -0.08;
+              flyerGroup.add(halo);
+              dimmables.push([halo.material, 0.13]);
+
+              /* reflejo del afiche en el charco de luz */
+              reflMesh = new THREE.Mesh(
+                new THREE.PlaneGeometry(3, 4),
+                new THREE.MeshBasicMaterial({
+                  map: tex,
+                  transparent: true,
+                  opacity: 0.085,
+                  depthWrite: false,
+                }),
+              );
+              reflMesh.scale.y = -1;
+              scene.add(reflMesh);
+              dimmables.push([reflMesh.material, 0.085]);
+
+              document.body.classList.add("stage-3d");
+              sceneReady = true;
+              clearTimeout(curtainTimeout);
+              setTimeout(curtainOff, 350);
+            },
+            undefined,
+            () => {
+              clearTimeout(curtainTimeout);
+              curtainOff(); // sin textura no hay escena; queda el <img>
+            },
+          );
+
+          /* ── humo: billboards girando lento ── */
+          const smokeTex = smokeTexture();
+          const smokes = [];
+          const SMOKE_N = isCoarse ? 7 : 11;
+          for (let i = 0; i < SMOKE_N; i++) {
+            const m = new THREE.Mesh(
+              new THREE.PlaneGeometry(9, 9),
+              new THREE.MeshBasicMaterial({
+                map: smokeTex,
+                color: 0x9a8f7a,
+                transparent: true,
+                opacity: 0.3 + Math.random() * 0.2,
+                depthWrite: false,
+              }),
+            );
+            m.position.set(
+              (Math.random() - 0.5) * 9,
+              (Math.random() - 0.5) * 5.5,
+              -1.5 - Math.random() * 4,
+            );
+            m.rotation.z = Math.random() * Math.PI * 2;
+            m.userData.spin = (Math.random() - 0.5) * 0.045;
+            scene.add(m);
+            smokes.push(m);
+          }
+
+          /* ── polvo en el haz + brasas doradas ── */
+          const dot = dotTexture();
+          function makePoints(n, size, color, opacity, spread, zOff) {
+            const pos = new Float32Array(n * 3);
+            for (let i = 0; i < n; i++) {
+              pos[i * 3] = (Math.random() - 0.5) * spread[0];
+              pos[i * 3 + 1] = (Math.random() - 0.5) * spread[1];
+              pos[i * 3 + 2] = (Math.random() - 0.5) * spread[2] + zOff;
+            }
+            const geo = new THREE.BufferGeometry();
+            geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+            const mat = new THREE.PointsMaterial({
+              size,
+              map: dot,
+              color,
+              transparent: true,
+              opacity,
+              blending: THREE.AdditiveBlending,
+              depthWrite: false,
+            });
+            return new THREE.Points(geo, mat);
+          }
+          /* polvo: fino y pálido, casi todo detrás del afiche */
+          const dust = makePoints(
+            isCoarse ? 90 : 160,
+            0.045,
+            0xe8dcb0,
+            0.4,
+            [3.6, 6.5, 2.4],
+            -1.4,
+          );
+          scene.add(dust);
+          /* brasas: escasas, grandes, doradas — distintas del polvo */
+          const embers = makePoints(
+            isCoarse ? 36 : 60,
+            0.11,
+            0xd9a63f,
+            0.55,
+            [10, 7, 5],
+            -1.8,
+          );
+          scene.add(embers);
+
+          /* materiales que se apagan con el scroll; el haz usa uniform */
+          const dimmables = [
+            [dust.material, 0.4],
+            [embers.material, 0.55],
+          ];
+          /* el humo se apaga MÁS rápido que la luz (curva dim²) para que
+             el final del acto lea negro antes de que emerja la pregunta */
+          const smokeDimmables = smokes.map((m) => [
+            m.material,
+            m.material.opacity,
+          ]);
+
+          /* ── cámara: mouse + dolly de scroll ── */
+          let mx = 0,
+            my = 0;
+          if (!isCoarse) {
+            window.addEventListener(
+              "mousemove",
+              (e) => {
+                mx = (e.clientX / window.innerWidth) * 2 - 1;
+                my = (e.clientY / window.innerHeight) * 2 - 1;
+              },
+              { passive: true },
+            );
+          }
+
+          /* distancia base de cámara según aspecto: el flyer protagoniza —
+             ~88% de la altura visible en desktop, ≤90% del ancho en móvil */
+          let baseZ = 6.2;
+          function resize() {
+            const w = acto.clientWidth;
+            const h = window.innerHeight;
+            renderer.setSize(w, h, false);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            const halfTan = Math.tan((camera.fov * Math.PI) / 360);
+            baseZ = Math.max(6.2, 3 / 0.9 / (2 * halfTan * camera.aspect));
+          }
+          window.addEventListener("resize", resize, { passive: true });
+          resize();
+
+          /* pausa: fuera de vista o pestaña oculta */
+          let inView = true;
+          new IntersectionObserver(
+            (entries) => {
+              inView = entries[0].isIntersecting;
+            },
+            { threshold: 0 },
+          ).observe(acto);
+
+          const smoothstep = (a, b, x) => {
+            const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+            return t * t * (3 - 2 * t);
+          };
+
+          const clock = new THREE.Clock();
+          const lookAt = new THREE.Vector3(0, 0, 0);
+
+          function animate() {
+            requestAnimationFrame(animate);
+            if (!inView || document.hidden) return;
+            const t = clock.getElapsedTime();
+            const ap = window.__ap || 0;
+
+            /* dolly: la cámara atraviesa la escena */
+            camera.position.z = baseZ - ap * (baseZ - 2.6);
+            const sway = isCoarse ? Math.sin(t * 0.3) * 0.18 : mx * 0.42;
+            const tilt = isCoarse ? Math.cos(t * 0.23) * 0.1 : -my * 0.26;
+            camera.position.x += (sway - camera.position.x) * 0.045;
+            camera.position.y += (0.1 + tilt - camera.position.y) * 0.045;
+            camera.lookAt(lookAt);
+
+            /* el flyer flota y se aparta al pasar */
+            if (flyerGroup.children.length) {
+              flyerGroup.position.y =
+                Math.sin(t * 0.7) * 0.07 + smoothstep(0.55, 1, ap) * 4.2;
+              flyerGroup.rotation.y =
+                Math.sin(t * 0.4) * 0.04 + (isCoarse ? 0 : mx * 0.1);
+              flyerGroup.rotation.x = isCoarse ? 0 : my * 0.05;
+            }
+
+            /* la luz muere mientras emerge la pregunta */
+            const dim = 1 - smoothstep(0.5, 0.94, ap);
+            dimmables.forEach(([m, base]) => {
+              m.opacity = base * dim;
+            });
+            smokeDimmables.forEach(([m, base]) => {
+              m.opacity = base * dim * dim;
+            });
+
+            /* el reflejo sigue al afiche, espejado en el piso */
+            if (reflMesh) {
+              reflMesh.position.y = -4.7 - flyerGroup.position.y;
+              reflMesh.rotation.y = flyerGroup.rotation.y;
+            }
+
+            /* humo a la deriva */
+            smokes.forEach((m) => {
+              m.rotation.z += m.userData.spin * 0.016;
+            });
+            dust.rotation.y = t * 0.02;
+            dust.position.y = -((t * 0.06) % 1.4);
+            embers.rotation.y = t * 0.014;
+            embers.position.y = ((t * 0.05) % 2) - 0.4;
+
+            renderer.render(scene, camera);
+          }
+          animate();
+        });
       })();
 
       /* ── INSTAGRAM EMBEDS (lazy) ────────────── */

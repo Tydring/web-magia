@@ -158,7 +158,7 @@ components:
 
 **Creative North Star: "El Teatro a Oscuras" (The Darkened Theater)**
 
-Every surface is a stage with the house lights off. The page background is near-black (#080808), and gold behaves like stage light, not paint: it appears as radial glows, hairline borders at alpha steps, thin gradient lines that fade to transparent, and tiny tracked-out labels. The subject of each page — a photograph, the show's flyer — is the performer; the interface frames and illuminates it without competing. On /conexiones this is literal: the client's flyer sits alone in a spotlight (`--ap` scroll act) before any copy appears.
+Every surface is a stage with the house lights off. The page background is near-black (#080808), and gold behaves like stage light, not paint: it appears as radial glows, hairline borders at alpha steps, thin gradient lines that fade to transparent, and tiny tracked-out labels. The subject of each page — a photograph, the show's flyer — is the performer; the interface frames and illuminates it without competing. On /conexiones this is now literal in the strongest sense: a WebGL stage (three.js) renders a fog-black theater where a gold fresnel beam finds the floating flyer in the smoke before any copy appears.
 
 The voice alternates between two registers: an announcer's whisper (small 600-weight uppercase labels with very wide tracking, up to 0.34em) and a marquee shout (900-weight display type with negative tracking and sub-1 line-height). Body copy sits at a light 300 weight; the emotional voice — slogans, ledes, the show's hook — is 300 italic. Everything with a corner is soft: pills, 24px cards, 16px textareas.
 
@@ -193,7 +193,7 @@ A four-step black stage lit by a three-step gold, with warm off-white for everyt
 - **Shadow Ink** (rgba(0,0,0,·) at 0.15–0.85): translucent pure black used only inside box-shadows, text-shadows, and gradient scrims — never as a surface or text color. Observed steps: 0.3 (social hover), 0.4 (scrolled nav), 0.5 (card lift), 0.55/0.7 (image scrims), 0.75/0.85 (artifact drops, hook text-shadow).
 
 ### Named Rules
-**The Gold-Is-Light Rule.** Gold arrives as illumination — radial glows, hairline alpha borders, 1px gradient lines fading to transparent, tiny labels, hover halos. The only solid gold fill on the site is the primary CTA's 135° gold→bright-gold gradient. Never paint a large surface opaque gold.
+**The Gold-Is-Light Rule.** Gold arrives as illumination — radial glows, hairline alpha borders, 1px gradient lines fading to transparent, tiny labels, hover halos — and, on /conexiones, as literal rendered light: a fresnel shader beam, floor pool, halo, and embers all tinted #c9a84c-family gold. The only solid gold fill on the site is the primary CTA's 135° gold→bright-gold gradient. Never paint a large surface opaque gold.
 
 **The One-Loud-Color Rule.** The Conexiones flyer's red (and any client artwork color) belongs to the artwork, not the palette. Photography and flyers are the only saturated non-gold color on any page; the UI never adopts their hues.
 
@@ -225,7 +225,7 @@ The full enumerated ramp lives in the frontmatter `typography.scale`. It reads a
 - **Galleries:** asymmetric 12-column grid with fixed row heights (300/220/200px, auto 230px); one dominant tall item spanning ~half the width and two rows, the rest tiling around it. Collapses to a 2-column 4:3 grid at 768px with the first (and any orphan last) item full-width 16:9.
 - **Splits:** 42/58 bio panels inside a single 24px-radius card, portrait on either side; single column at 768px, portrait always first.
 - **Breakpoints (desktop-first):** 1024px (3→2 card columns), 960/961px (show grid and ticket stack), 768px (single column, bio stack), 600px (nav collapses to hamburger drawer), 480px (tight gutters, stacked CTAs). Must work to 375px.
-- **/conexiones opening act:** a 195vh section with a sticky 100dvh stage; scroll progress is written to `--ap` (0→1) by rAF-throttled JS, and CSS derives everything from it — spotlight decay, flyer scale/brightness recession, hook reveal. Under `prefers-reduced-motion` the act becomes a static stacked layout.
+- **/conexiones opening act ("El escenario"):** a 260vh section with a sticky 100dvh stage. Scroll progress is written to `--ap` (0→1) by rAF-throttled JS; CSS derives the DOM-state choreography from it (spotlight decay, flyer recession, hook reveal, canvas fade past 0.86) and the WebGL scene reads the same value for its camera dolly. The default state is pure DOM — the `<img>` flyer under CSS radial light pools; `body.stage-3d` (added only after successful WebGL init and flyer-texture load) swaps in the canvas. Under `prefers-reduced-motion` the scene never initializes and the act is a static lit composition.
 
 ## Elevation & Depth
 
@@ -280,6 +280,23 @@ Everything curves. Interactive single-line elements — buttons, nav pills, tags
 ### Theater Ticket (signature, /conexiones)
 A 24px-radius #141414 band with a gold-alpha-30 border, split ~1.9fr/1fr by a 1px dashed gold rule with 24px punched-notch circles at its ends. Left: a 2-column grid of stub-label (gold micro-label) / stub-value (700-weight off-white) pairs. Right: price micro-label + primary CTA. Stacks vertically at 960px, notches rotating to the horizontal rule.
 
+### WebGL Stage — "El escenario" (signature, /conexiones opening act)
+Self-hosted three.js r149 UMD (`/js/three.min.js`, MIT), loaded deferred with CSP untouched (`script-src 'self'`). Scene vocabulary, all procedural canvas textures with zero external assets:
+- **Stage:** fog-black world (FogExp2 0x060606, density 0.07) on a #080808 clear color; 40° perspective camera.
+- **Flyer:** the client artwork as a floating textured plane (3×4 units) with idle sine float and mouse tilt; behind it a gold halo plane (0xc9a84c at 0.13, additive); below it a mirrored live reflection in the light pool (opacity 0.085) that tracks the flyer's motion.
+- **Beam:** the spotlight cone (ConeGeometry 2.7×7.2, open-ended) in a fresnel ShaderMaterial — uColor #c9a84c, base opacity 0.17, lateral dissolution `smoothstep(0.05, 0.72, |dot(N,V)|)`, vertical profile floored at 0.32 so the cone widens readably to the floor. Additive, double-sided, no depth write.
+- **Floor pool:** feathered elliptical gold pool (256×128 canvas radial texture, 0.15 additive) under the flyer.
+- **Atmosphere:** slow-spinning smoke billboards tinted 0x9a8f7a at 0.30–0.50; fine pale dust (0xe8dcb0) drifting in the beam; sparse large gold embers (0xd9a63f, size 0.11). All particles sit z-behind the flyer plane.
+
+**Choreography:** the sticky 260vh act's `--ap` drives an aspect-aware camera dolly (the flyer never exceeds ~76% of view width; camera z runs baseZ→2.6, passing through the poster) while lights and particles dim by `1 − smoothstep(0.5, 0.94, ap)` and smoke by the square of that, so the act reads black before the hook line surfaces; the canvas itself CSS-fades out past `--ap` 0.86.
+
+**Discipline:** rendering pauses off-screen (IntersectionObserver) and on hidden tabs; DPR capped at 2 (1.5 on coarse pointers); particle counts halved on coarse; autonomous camera sway replaces mouse parallax on touch.
+
+**Progressive enhancement (the invariant):** the DOM `<img>` flyer plus CSS radial light pools are the default shipped state. `body.stage-3d` is added only after WebGL init *and* flyer-texture load both succeed; any failure (no JS, no WebGL, texture error, reduced motion) leaves the CSS composition — never a blank stage.
+
+### Curtain Loader (/conexiones)
+Full-screen #080808 curtain: "CONEXIONES" in gold spaced caps (0.78rem, 0.5em tracking) over a 1px gold-alpha hairline crossed by an infinite gold sweep (1.1s ease-in-out). JS-gated (`html.curtain-on` is set by inline script, so no-JS visitors never see it); lifts when the flyer texture is ready, with a 3.5s failsafe, and is skipped entirely under reduced motion.
+
 ### Custom Cursor (desktop only)
 8px solid gold dot + 36px lerp-following ring (1.5px gold at 0.7 alpha, 0.12 easing). Over links/buttons the ring grows to 60px gold-bright and the dot hides. Hidden until first mousemove (`body.cursor-active`) and entirely absent on coarse pointers.
 
@@ -287,7 +304,7 @@ A 24px-radius #141414 band with a gold-alpha-30 border, split ~1.9fr/1fr by a 1p
 - **Reveals:** `.fade-up` — opacity 0 / translateY(32px) → visible over 0.8s on `--ease-spring` (cubic-bezier(0.16,1,0.3,1)), fired by IntersectionObserver at 0.12 threshold with optional `data-delay` stagger (100–300ms steps).
 - **Hovers:** spring-eased lifts (-2px buttons, -6px cards), image scale 1.04–1.06 with brightness restore.
 - **Loops:** strictly linear (marquee, ticker, scroll-cue pulse).
-- **Scroll-driven:** rAF-throttled scroll writing CSS variables (`--hero-parallax`, `--ap`); CSS owns the mapping.
+- **Scroll-driven:** rAF-throttled scroll writing CSS variables (`--hero-parallax`, `--ap`); CSS owns the DOM mapping, and on /conexiones the WebGL stage consumes the same progress value (`window.__ap`) for its camera dolly and light decay.
 - **Reduced motion:** honored globally — fade-ups render visible, loops stop, parallax/particles/sticky acts become static.
 
 ## Do's and Don'ts
@@ -309,6 +326,8 @@ A 24px-radius #141414 band with a gold-alpha-30 border, split ~1.9fr/1fr by a 1p
 - **Don't** use unicode glyphs or emoji as component icons — inline stroke SVGs only. (The ✦ star is exempt: it is the brand ornament for dividers and ticker separators, not an icon.)
 - **Don't** add a second typeface; Montserrat 300–900 (+ italic) is a binding client commitment.
 - **Don't** treat the pill section-tag as mandatory framing — /conexiones ships without eyebrow pills and that restraint is part of its staging.
+- **Don't** promote /conexiones-only stage devices (WebGL scene, curtain loader, ticker, ticket) to homepage obligations — they are surface vocabulary available to the system, adopted deliberately per surface.
+- **Don't** ship a WebGL surface without its DOM/CSS default state; the canvas is an enhancement layered onto a complete composition, never the only render path.
 
 ### Documented Exceptions (out of scope for audits)
 **The Instagram embed** in /conexiones/index.html (`blockquote.instagram-media` and its inline markup) is verbatim third-party code required by Instagram's embed contract. Its Arial stack, 14px/18px sizes, white/grey/blue palette (#FFF, #F4F4F4, #3897f0, #c9c8cd, #000000), and 3–4px radii are not part of this design system and must not be imitated, "fixed", or used to justify new tokens. The site's only concession to it is the `.ig-embed-card` frame (24px card, 12px inset).
