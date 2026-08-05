@@ -1,5 +1,15 @@
 # Netlify configuration for rafaelgmagia.com
 
+# ── Build ──────────────────────────────────────────────────────
+# Static site from repo root + conexiones-app (Next.js static export)
+# served at /conexiones. See build.sh.
+[build]
+  command = "bash build.sh"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
 # ── Redirects ──────────────────────────────────────────────────
 # Force www → apex (optional, uncomment if preferred)
 # [[redirects]]

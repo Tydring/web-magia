@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Fx from "@/components/Fx";
 import InstagramReel from "@/components/InstagramReel";
+import poster from "@/public/img/poster-conexiones-960x1280.jpg";
 
 const TICKETS_URL =
   "https://bp.ticketplate.com/checkout/conexiones-202607311900/select/Gold";
@@ -59,7 +60,7 @@ export default function Page() {
         <section id="hero" className="relative z-10 flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 text-center">
           <div className="absolute inset-0 z-0" aria-hidden="true">
             <Image
-              src="/img/poster-conexiones-960x1280.jpg"
+              src={poster}
               alt=""
               fill
               priority
@@ -233,7 +234,7 @@ export default function Page() {
             <div data-rc className="relative z-0">
               <div data-zoom className="glow-panel relative aspect-[3/4] overflow-hidden">
                 <Image
-                  src="/img/poster-conexiones-960x1280.jpg"
+                  src={poster}
                   alt="Flyer oficial de Conexiones: Rafael Gorrochotegui tras una jaula, con la mirada al frente"
                   fill
                   sizes="(min-width: 768px) 40vw, 90vw"

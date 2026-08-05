@@ -18,6 +18,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://rafaelgmagia.com"),
   title: "Conexiones | Un espectáculo de Rafael Gorrochotegui",
   description:
     "Hay hilos que no se ven. Esta noche, sí. Magia y mentalismo en vivo con Rafael Gorrochotegui. Sábado 29 de agosto, Teatro Ocho, Las Mercedes, Caracas.",
