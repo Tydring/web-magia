@@ -215,7 +215,7 @@ export default function Page() {
             </p>
 
             {/* DRAFT COPY: Rafael reviews before launch */}
-            <div className="mt-16 space-y-20 md:mt-24 md:space-y-28">
+            <div className="mt-10 space-y-10 md:mt-14 md:space-y-16">
               <div data-rc className="max-w-md">
                 <h3 className="font-display text-3xl font-normal uppercase text-ivory md:text-4xl">
                   Asombro
@@ -352,35 +352,12 @@ export default function Page() {
             </dl>
 
             <div className="mt-14 flex flex-col items-center gap-4">
-              {/* El hilo se cierra en un circulo alrededor del boton */}
-              <span id="hilo-circulo" className="relative inline-block">
-                <svg
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -inset-3 h-[calc(100%+24px)] w-[calc(100%+24px)]"
-                  viewBox="0 0 200 64"
-                  preserveAspectRatio="none"
-                  fill="none"
-                >
-                  <rect
-                    id="hilo-circulo-rect"
-                    className="hilo-path"
-                    x="1.5"
-                    y="1.5"
-                    width="197"
-                    height="61"
-                    rx="30.5"
-                    pathLength={100}
-                    stroke="#f2543f"
-                    strokeWidth="1.25"
-                  />
-                </svg>
-                <a
-                  href={TICKETS_URL}
-                  className="cta-principal inline-block rounded-full bg-accent-deep px-9 py-4 text-[12px] font-semibold uppercase tracking-[0.2em] text-ivory hover:bg-[#d63031]"
-                >
-                  Comprar entradas
-                </a>
-              </span>
+              <a
+                href={TICKETS_URL}
+                className="cta-principal inline-block rounded-full bg-accent-deep px-9 py-4 text-[12px] font-semibold uppercase tracking-[0.2em] text-ivory hover:bg-[#d63031]"
+              >
+                Comprar entradas
+              </a>
               <p className="text-[11px] tracking-[0.15em] text-ivory/60">
                 Desde Ref. 10 + fee · Ventas finales, sin reembolso
               </p>

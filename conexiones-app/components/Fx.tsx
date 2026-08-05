@@ -86,30 +86,6 @@ export default function Fx() {
         },
       });
 
-      // El hilo, beat 4: closes into a circle around the final CTA, once
-      const circleRect = document.querySelector<SVGRectElement>("#hilo-circulo-rect");
-      if (circleRect) {
-        gsap.set(circleRect, { strokeDasharray: 100, strokeDashoffset: 100 });
-        gsap.to(circleRect, {
-          strokeDashoffset: 0,
-          duration: 1.2,
-          ease: "expo.inOut",
-          scrollTrigger: { trigger: "#cierre", start: "top 70%", once: true },
-          onComplete: () => {
-            gsap.fromTo(
-              "#hilo-circulo",
-              { filter: "drop-shadow(0 0 2px rgba(242, 84, 63, 0.4))" },
-              {
-                filter: "drop-shadow(0 0 10px rgba(242, 84, 63, 0.8))",
-                duration: 0.3,
-                yoyo: true,
-                repeat: 1,
-              }
-            );
-          },
-        });
-      }
-
       // Quiet layer: section reveals, children staggered 60ms, play once
       gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((sec) => {
         const kids = sec.querySelectorAll("[data-rc]");
