@@ -57,7 +57,7 @@ export default function InstagramReel({ url }: { url: string }) {
           href={url}
           target="_blank"
           rel="noopener"
-          className="block py-10 text-center text-[12px] font-semibold uppercase tracking-[0.2em] text-gold hover:text-gold-bright"
+          className="block py-10 text-center text-[12px] font-semibold uppercase tracking-[0.2em] text-accent hover:text-accent-bright"
         >
           Ver el reel en Instagram
         </a>

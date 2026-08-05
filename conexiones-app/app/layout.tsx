@@ -1,18 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Montserrat } from "next/font/google";
+import { Anton, Montserrat } from "next/font/google";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
+const anton = Anton({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-cormorant",
+  weight: "400",
+  variable: "--font-anton",
   display: "swap",
 });
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
   variable: "--font-montserrat",
   display: "swap",
 });
@@ -37,7 +37,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${cormorant.variable} ${montserrat.variable}`}>
+    <html lang="es" className={`${anton.variable} ${montserrat.variable}`}>
       <body className="grain">{children}</body>
     </html>
   );

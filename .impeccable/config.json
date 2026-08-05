@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          "conexiones-app/**"
+        ],
+        "createdAt": "2026-08-05T01:49:33.392Z",
+        "reason": "Cliente pidio acento rojo del show (flyer) para conexiones-app; DESIGN.md dorado rige solo el sitio principal"
+      }
+    ]
+  }
+}

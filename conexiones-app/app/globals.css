@@ -1,17 +1,19 @@
 @import "tailwindcss";
 
 /*
-  Token law: london.derrenbrown.co.uk.md (taste file), warm deviation applied.
-  Stage black, one gold axis at three intensities, glow-based depth.
+  Token law: london.derrenbrown.co.uk.md (taste file), estetica del show aplicada:
+  escenario negro, un solo eje rojo (las lineas del show) en tres intensidades,
+  profundidad por brillo. Rojo muestreado del flyer oficial (banda #c1272d, #d63831).
 */
 @theme {
   --color-stage: #000000;
   --color-ivory: #f0ece4;
-  --color-gold: #c9a84c;
-  --color-gold-bright: #e8c96a;
-  --color-gold-dim: #a07830;
+  --color-accent: #dd4a3e;
+  --color-accent-bright: #f2543f;
+  --color-accent-deep: #c1272d;
+  --color-accent-dim: #8a2620;
 
-  --font-display: var(--font-cormorant);
+  --font-display: var(--font-anton);
   --font-body: var(--font-montserrat);
 
   --ease-token: cubic-bezier(0.4, 0, 0.2, 1);
@@ -41,7 +43,7 @@ button {
 /* Visible focus on interactive elements, AA requirement */
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--color-gold-bright);
+  outline: 2px solid var(--color-accent-bright);
   outline-offset: 4px;
   border-radius: 999px;
 }
@@ -51,12 +53,12 @@ button:focus-visible {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45), 0 6px 6px rgba(0, 0, 0, 0.35);
 }
 .cta-principal:hover {
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5), 0 0 18px rgba(232, 201, 106, 0.35);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5), 0 0 18px rgba(242, 84, 63, 0.4);
 }
 
-/* Glow depth system: zero-offset gold light, never cast shadows */
+/* Glow depth system: zero-offset red light, never cast shadows */
 .glow-panel {
-  box-shadow: 0 0 12px 1px rgba(201, 168, 76, 0.28), 0 0 33px 4px rgba(201, 168, 76, 0.1),
+  box-shadow: 0 0 12px 1px rgba(214, 56, 49, 0.32), 0 0 33px 4px rgba(214, 56, 49, 0.12),
     inset 0 0 40px rgba(0, 0, 0, 0.35);
 }
 
@@ -83,7 +85,7 @@ button:focus-visible {
   background: radial-gradient(ellipse 120% 90% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.5) 100%);
 }
 
-/* Thread strokes render invisible until JS measures them; without JS they stay visible */
+/* Thread strokes: without JS they stay visible and fully drawn */
 .hilo-path {
   vector-effect: non-scaling-stroke;
 }

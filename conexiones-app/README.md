@@ -22,10 +22,14 @@ Sitio nuevo apuntando a este directorio (`conexiones-app/`):
 
 ## Diseño
 
-- Ley de diseño: `../london.derrenbrown.co.uk.md` (archivo taste), con desviación
-  cálida aprobada: eje dorado en vez de teal.
+- Ley de diseño: `../london.derrenbrown.co.uk.md` (archivo taste) + estética del
+  show por pedido del cliente: acento rojo del flyer, tipografía condensada
+  (Anton) para títulos.
 - Tokens en `app/globals.css` (@theme): stage `#000000`, ivory `#f0ece4`,
-  gold `#c9a84c`, gold-bright `#e8c96a`, gold-dim `#a07830`.
+  accent `#dd4a3e`, accent-bright `#f2543f`, accent-deep `#c1272d` (CTA),
+  accent-dim `#8a2620`. Rojos muestreados del flyer oficial.
+- Si llega el PNG oficial del lockup del título, guardarlo como
+  `public/img/titulo-conexiones.png` y sustituir el h1 del hero.
 - Una sola animación protagonista: el hilo (SVG, GSAP). Todo lo demás es capa
   silenciosa. `prefers-reduced-motion` deja el hilo dibujado y estático.
 

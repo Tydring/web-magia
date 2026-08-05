@@ -98,9 +98,9 @@ export default function Fx() {
           onComplete: () => {
             gsap.fromTo(
               "#hilo-circulo",
-              { filter: "drop-shadow(0 0 2px rgba(232, 201, 106, 0.4))" },
+              { filter: "drop-shadow(0 0 2px rgba(242, 84, 63, 0.4))" },
               {
-                filter: "drop-shadow(0 0 10px rgba(232, 201, 106, 0.8))",
+                filter: "drop-shadow(0 0 10px rgba(242, 84, 63, 0.8))",
                 duration: 0.3,
                 yoyo: true,
                 repeat: 1,
