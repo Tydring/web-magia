@@ -11,7 +11,13 @@ export default function Page() {
     <div className="relative">
       <Fx />
 
-      {/* El hilo: una linea roja continua, como las lineas del show. Decorativa. */}
+      {/*
+        El hilo: una linea roja continua, como las lineas del show. Decorativa.
+        Regla: nunca pasa por encima de ningun elemento. Recorre los margenes
+        exteriores (x=2 / x=98) y solo cruza la pagina por los huecos medidos
+        entre secciones. Las coordenadas de cruce son distintas en movil y en
+        escritorio porque las secciones caen a alturas distintas.
+      */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5]">
         <svg
           className="h-full w-full"
@@ -20,13 +26,13 @@ export default function Page() {
           fill="none"
         >
           {/*
-            Version movil: el hilo recorre el margen derecho durante los bloques
-            de texto y solo cruza el centro en los espacios entre secciones,
-            para no chocar con la lectura.
+            La ruta real la calcula components/Fx.tsx midiendo la pagina.
+            Esta d es el respaldo sin JS: baja recta por el margen derecho,
+            que es seguro en cualquier ancho.
           */}
           <path
-            className="hilo-main hilo-path md:hidden"
-            d="M 50 130 C 72 152, 90 168, 91 195 S 87 245, 90 285 C 93 325, 86 365, 90 405 S 90 445, 62 472 C 32 500, 26 542, 46 578 S 88 622, 90 662 C 92 700, 60 728, 50 758"
+            className="hilo-main hilo-path"
+            d="M 50 172 C 72 174, 98 180, 98 196 L 98 900 C 98 926, 72 936, 50 940"
             stroke="#f2543f"
             strokeOpacity="0.28"
             strokeWidth="4.5"
@@ -34,24 +40,8 @@ export default function Page() {
             style={{ filter: "blur(3px)" }}
           />
           <path
-            className="hilo-main hilo-path md:hidden"
-            d="M 50 130 C 72 152, 90 168, 91 195 S 87 245, 90 285 C 93 325, 86 365, 90 405 S 90 445, 62 472 C 32 500, 26 542, 46 578 S 88 622, 90 662 C 92 700, 60 728, 50 758"
-            stroke="#f2543f"
-            strokeWidth="1.25"
-            strokeLinecap="round"
-          />
-          <path
-            className="hilo-main hilo-path hidden md:block"
-            d="M 55 128 C 30 180, 72 230, 45 295 S 26 390, 52 455 C 74 505, 30 565, 42 635 S 70 705, 50 758"
-            stroke="#f2543f"
-            strokeOpacity="0.28"
-            strokeWidth="4.5"
-            strokeLinecap="round"
-            style={{ filter: "blur(3px)" }}
-          />
-          <path
-            className="hilo-main hilo-path hidden md:block"
-            d="M 55 128 C 30 180, 72 230, 45 295 S 26 390, 52 455 C 74 505, 30 565, 42 635 S 70 705, 50 758"
+            className="hilo-main hilo-path"
+            d="M 50 172 C 72 174, 98 180, 98 196 L 98 900 C 98 926, 72 936, 50 940"
             stroke="#f2543f"
             strokeWidth="1.25"
             strokeLinecap="round"
@@ -174,6 +164,11 @@ export default function Page() {
 
         {/* 3. LA EXPERIENCIA. Constelacion de personas; en movil vive en los margenes y espacios entre bloques. */}
         <section id="experiencia" data-reveal className="relative px-6 py-28 md:py-36">
+          {/*
+            La constelacion: el hilo se ramifica en puntos que se conectan.
+            Vive en el margen derecho (el hilo principal baja por el izquierdo
+            en esta seccion), asi no tapa ningun texto.
+          */}
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
             <svg
               className="h-full w-full"
@@ -182,28 +177,21 @@ export default function Page() {
               fill="none"
             >
               <path
-                className="hilo-rama hilo-path md:hidden"
-                d="M 91 4 C 82 7, 72 11, 64 18 M 64 18 C 52 24, 40 29, 30 34 M 91 30 C 90 37, 89 43, 88 50 M 88 50 C 70 55, 50 60, 34 66 M 34 66 C 40 74, 48 81, 55 88"
-                stroke="#f2543f"
-                strokeOpacity="0.3"
-                strokeWidth="1"
-                strokeLinecap="round"
-              />
-              <path
-                className="hilo-rama hilo-path hidden md:block"
-                d="M 50 2 C 34 10, 24 14, 18 20 M 50 2 C 62 12, 72 18, 80 26 M 18 20 C 26 34, 32 44, 28 54 M 80 26 C 70 40, 60 50, 64 62 M 28 54 C 38 68, 46 76, 50 84 M 64 62 C 58 72, 52 78, 50 84"
+                className="hilo-rama hilo-path"
+                d="M 98.6 8 L 98 24 L 99 40 L 98 56 L 98.8 72 L 98.3 90"
                 stroke="#f2543f"
                 strokeOpacity="0.45"
                 strokeWidth="1"
                 strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </svg>
-            <span className="hilo-punto absolute left-[88%] top-[8%] h-1.5 w-1.5 rounded-full bg-accent-bright md:left-[18%] md:top-[20%]" />
-            <span className="hilo-punto absolute left-[64%] top-[18%] h-1.5 w-1.5 rounded-full bg-accent-bright md:left-[80%] md:top-[26%]" />
-            <span className="hilo-punto absolute left-[30%] top-[34%] h-1.5 w-1.5 rounded-full bg-accent-bright md:left-[28%] md:top-[54%]" />
-            <span className="hilo-punto absolute left-[88%] top-[50%] h-1.5 w-1.5 rounded-full bg-accent-bright md:left-[64%] md:top-[62%]" />
-            <span className="hilo-punto absolute left-[34%] top-[66%] h-1 w-1 rounded-full bg-accent-bright md:left-[46%] md:top-[38%]" />
-            <span className="hilo-punto absolute left-[55%] top-[88%] h-1.5 w-1.5 rounded-full bg-accent-bright md:left-[50%] md:top-[84%]" />
+            <span className="hilo-punto absolute left-[98.6%] top-[8%] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-bright" />
+            <span className="hilo-punto absolute left-[98%] top-[24%] h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-bright" />
+            <span className="hilo-punto absolute left-[99%] top-[40%] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-bright" />
+            <span className="hilo-punto absolute left-[98%] top-[56%] h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-bright" />
+            <span className="hilo-punto absolute left-[98.8%] top-[72%] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-bright" />
+            <span className="hilo-punto absolute left-[98.3%] top-[90%] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-bright" />
           </div>
 
           <div className="relative z-10 mx-auto max-w-3xl">
