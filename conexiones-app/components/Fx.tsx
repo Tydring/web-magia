@@ -41,19 +41,26 @@ function settledBounds(el: HTMLElement) {
   return { top: r.top + window.scrollY - dy, bottom: r.bottom + window.scrollY - dy };
 }
 
-function contentBoxes() {
+type Box = { t: number; b: number; l: number; r: number };
+
+function contentBoxes(): Box[] {
   const sel =
     "main h1, main h2, main h3, main p, main dl, main a, main img, main blockquote, main iframe, footer p, footer nav";
-  const out: { t: number; b: number }[] = [];
+  const out: Box[] = [];
   document.querySelectorAll<HTMLElement>(sel).forEach((el) => {
     // El fondo del hero es decorativo: el hilo puede pasar por delante.
     if (el.tagName === "IMG" && el.closest("#hero")) return;
     const r = el.getBoundingClientRect();
     if (r.width < 4 || r.height < 4) return;
     const b = settledBounds(el);
-    out.push({ t: b.top - CLEAR, b: b.bottom + CLEAR });
+    out.push({ t: b.top - CLEAR, b: b.bottom + CLEAR, l: r.left - CLEAR, r: r.right + CLEAR });
   });
   return out;
+}
+
+/** ¿Puede el hilo bajar en vertical por x entre y1 e y2 sin tocar nada? */
+function corridorClear(xPx: number, y1: number, y2: number, boxes: Box[]) {
+  return !boxes.some((b) => b.b > y1 && b.t < y2 && b.l < xPx && b.r > xPx);
 }
 
 /** Franjas horizontales donde no hay ningun elemento: por ahi puede cruzar. */
@@ -74,59 +81,180 @@ function freeWindows(fromY: number, toY: number, boxes: { t: number; b: number }
   return wins.filter(([a, b]) => b - a >= 36);
 }
 
-function buildPath(): string | null {
+/** Puntos por donde el hilo debe pasar: el canal de LA EXPERIENCIA. */
+function nodePoints() {
+  const out: { x: number; y: number }[] = [];
+  document.querySelectorAll<HTMLElement>("[data-hilo-node]").forEach((el) => {
+    const rect = el.getBoundingClientRect();
+    if (rect.width < 1 && rect.height < 1) return;
+    const b = settledBounds(el);
+    out.push({ x: rect.left + rect.width / 2, y: (b.top + b.bottom) / 2 });
+  });
+  return out.sort((a, b) => a.y - b.y);
+}
+
+/** Redondeo corto para que la ruta no sea una cadena enorme. */
+const r = (n: number) => Math.round(n * 10) / 10;
+
+function buildPath(): { d: string; w: number; h: number } | null {
   const H = document.documentElement.scrollHeight;
-  if (!H) return null;
+  const W = document.documentElement.clientWidth;
+  if (!H || !W) return null;
   const hero = document.getElementById("hero");
   const footer = document.querySelector("footer");
   const fromY = hero ? hero.getBoundingClientRect().bottom + window.scrollY : 0;
   const toY = footer ? footer.getBoundingClientRect().top + window.scrollY : H;
 
-  const wins = freeWindows(fromY, toY, contentBoxes());
+  const boxes = contentBoxes();
+  const wins = freeWindows(fromY, toY, boxes);
   if (wins.length < 2) return null;
 
-  const u = (px: number) => +((px / H) * 1000).toFixed(1);
+  const ML = W * 0.02;
+  const MR = W * 0.98;
+  const mid = W / 2;
+  const nodes = nodePoints();
 
-  // Arranque: nace en el centro, bajo el hero, y se va al margen derecho.
   const [fa, fb] = wins[0];
   const startY = fa + Math.min(20, (fb - fa) * 0.35);
   const settleY = Math.min(fb - 2, startY + 26);
-  let x = MARGIN_R;
-  let d = `M 50 ${u(startY)} C 72 ${u(startY + 5)}, ${x} ${u(startY + 11)}, ${x} ${u(settleY)}`;
+  let x = MR;
+  let d = `M ${mid} ${r(startY)} C ${r(mid + W * 0.15)} ${r(startY + 5)}, ${r(x)} ${r(startY + 11)}, ${r(x)} ${r(settleY)}`;
   let lastY = settleY;
-
-  // Cruces: uno por hueco, siempre contenidos dentro del hueco.
-  const minGap = H * 0.1;
   let lastCross = lastY;
-  for (const [a, b] of wins.slice(1, -1)) {
+
+  /*
+    Huecos por donde entra y sale del canal. Se elige el mas lejano posible en
+    cada sentido (mientras la bajada vertical por el canal siga libre), para
+    que el giro sea un trazo largo y no un codo apretado.
+  */
+  let entryWin: [number, number] | null = null;
+  let exitWin: [number, number] | null = null;
+  if (nodes.length) {
+    const cx = nodes[0].x;
+    const firstY = nodes[0].y;
+    const lastNodeY = nodes[nodes.length - 1].y;
+    for (const w of wins) {
+      if (w[1] > firstY || w[0] < lastY - 1) continue;
+      if (corridorClear(cx, w[1] - 2, firstY, boxes)) {
+        entryWin = w;
+        break;
+      }
+    }
+    for (const w of wins.slice(0, -1)) {
+      if (w[0] < lastNodeY) continue;
+      if (!corridorClear(cx, lastNodeY, w[0] + 2, boxes)) break;
+      exitWin = w;
+    }
+    if (!entryWin || !exitWin) {
+      entryWin = null;
+      exitWin = null;
+    }
+  }
+
+  const minGap = H * 0.1;
+  const crossAt = ([a, b]: [number, number]) => {
     const yc = (a + b) / 2;
-    if (yc - lastCross < minGap) continue;
+    if (yc - lastCross < minGap) return;
     const k = Math.min((b - a) / 2 - 4, 70);
-    if (k < 12) continue;
-    const nx = x === MARGIN_R ? MARGIN_L : MARGIN_R;
-    d += ` L ${x} ${u(yc - k)} C ${x} ${u(yc)}, ${nx} ${u(yc)}, ${nx} ${u(yc + k)}`;
+    if (k < 12) return;
+    const nx = x === MR ? ML : MR;
+    d += ` L ${r(x)} ${r(yc - k)} C ${r(x)} ${r(yc)}, ${r(nx)} ${r(yc)}, ${r(nx)} ${r(yc + k)}`;
     x = nx;
     lastCross = yc;
     lastY = yc + k;
+  };
+
+  const middle = wins.slice(1, -1);
+
+  if (entryWin && exitWin) {
+    for (const w of middle) {
+      if (w[0] >= entryWin[0]) break;
+      crossAt(w);
+    }
+
+    // Entra al canal
+    const cx = nodes[0].x;
+    const [ea, eb] = entryWin;
+    const y1 = Math.max(lastY + 6, ea + Math.min(12, (eb - ea) * 0.25));
+    const y2 = Math.min(eb - 3, y1 + Math.max(16, (eb - y1) * 0.6));
+    d += ` L ${r(x)} ${r(y1)} C ${r(x)} ${r((y1 + y2) / 2)}, ${r(cx)} ${r((y1 + y2) / 2)}, ${r(cx)} ${r(y2)}`;
+
+    // Enhebra los nudos
+    for (const n of nodes) d += ` L ${r(n.x)} ${r(n.y)}`;
+
+    // Sale del canal hacia el margen izquierdo
+    const lx = nodes[nodes.length - 1].x;
+    const [xa, xb] = exitWin;
+    const y3 = Math.max(nodes[nodes.length - 1].y + 6, xa + 4);
+    const y4 = Math.min(xb - 3, y3 + Math.max(16, (xb - y3) * 0.5));
+    d += ` L ${r(lx)} ${r(y3)} C ${r(lx)} ${r((y3 + y4) / 2)}, ${r(ML)} ${r((y3 + y4) / 2)}, ${r(ML)} ${r(y4)}`;
+    x = ML;
+    lastY = y4;
+    lastCross = y4;
+
+    for (const w of middle) {
+      if (w[0] <= exitWin[0]) continue;
+      crossAt(w);
+    }
+  } else {
+    for (const w of middle) crossAt(w);
   }
 
-  // Cola: baja y se recoge al centro dentro del ultimo hueco.
   const [la, lb] = wins[wins.length - 1];
   const endY = Math.min(lb - 4, toY - 4);
   const curlY = Math.max(lastY + 8, Math.min(la + 6, endY - 24));
-  d += ` L ${x} ${u(curlY)} C ${x} ${u(endY - 8)}, 70 ${u(endY)}, 50 ${u(endY)}`;
-  return d;
+  d += ` L ${r(x)} ${r(curlY)} C ${r(x)} ${r(endY - 8)}, ${r(mid + W * 0.14)} ${r(endY)}, ${r(mid)} ${r(endY)}`;
+  return { d, w: W, h: H };
+}
+
+/*
+  El SVG del hilo usa un viewBox 1:1 con la pagina, asi que una unidad del
+  trazado es un pixel y el eje Y del trazado es directamente la altura de
+  pagina. Eso hace que el patron de guiones sea exacto y que se pueda dibujar
+  el hilo "hasta donde va leyendo el visitante".
+*/
+type Lut = { ys: number[]; ss: number[]; total: number };
+
+function buildLut(p: SVGPathElement): Lut | null {
+  const total = p.getTotalLength();
+  if (!total) return null;
+  const steps = 400;
+  const ys: number[] = [];
+  const ss: number[] = [];
+  for (let i = 0; i <= steps; i++) {
+    const s = (total * i) / steps;
+    ys.push(p.getPointAtLength(s).y);
+    ss.push(s);
+  }
+  return { ys, ss, total };
+}
+
+function lenAtY(lut: Lut, y: number) {
+  const { ys, ss } = lut;
+  if (y <= ys[0]) return 0;
+  for (let i = 1; i < ys.length; i++) {
+    if (ys[i] >= y) {
+      const span = ys[i] - ys[i - 1];
+      const t = span > 0.001 ? (y - ys[i - 1]) / span : 0;
+      return ss[i - 1] + (ss[i] - ss[i - 1]) * t;
+    }
+  }
+  return lut.total;
 }
 
 let lastD = "";
 
 /** Devuelve true si la ruta cambio. */
 function applyPath() {
-  const d = buildPath();
-  if (!d || d === lastD) return false;
-  lastD = d;
+  const res = buildPath();
+  if (!res || res.d === lastD) return false;
+  lastD = res.d;
+  const svg = document.getElementById("hilo-svg");
+  if (svg) svg.setAttribute("viewBox", `0 0 ${res.w} ${res.h}`);
   document.querySelectorAll<SVGPathElement>("path.hilo-main").forEach((p) => {
-    p.setAttribute("d", d);
+    p.setAttribute("d", res.d);
+    // Con el viewBox 1:1 sobra, y ademas enturbia las unidades del guion.
+    p.removeAttribute("vector-effect");
   });
   return true;
 }
@@ -141,7 +269,7 @@ export default function Fx() {
     if (reduced) {
       gsap.set("[data-line-inner]", { yPercent: 0, opacity: 1 });
       gsap.set("[data-rc]", { opacity: 1, y: 0 });
-      gsap.set(".hilo-punto", { opacity: 0.35 });
+      gsap.set(".hilo-punto", { opacity: 1 });
       const onStatic = () => applyPath();
       window.addEventListener("resize", onStatic);
       window.addEventListener("load", onStatic);
@@ -179,29 +307,33 @@ export default function Fx() {
 
       // El hilo, beat 2: continues down the whole page, scrubbed.
       // Se rehace cada vez que la ruta cambia (imagenes, embed, ancho).
-      let mainTweens: gsap.core.Tween[] = [];
+      let mainST: ScrollTrigger | null = null;
       drawMain = () => {
-        mainTweens.forEach((t) => {
-          t.scrollTrigger?.kill();
-          t.kill();
-        });
-        mainTweens = [];
-        document.querySelectorAll<SVGPathElement>(".hilo-main").forEach((p) => {
-          const len = p.getTotalLength();
-          gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
-          mainTweens.push(
-            gsap.to(p, {
-              strokeDashoffset: 0,
-              ease: "none",
-              scrollTrigger: {
-                trigger: "#hero",
-                start: "bottom 90%",
-                endTrigger: "#cierre",
-                end: "top 40%",
-                scrub: 0.8,
-              },
-            })
-          );
+        mainST?.kill();
+        mainST = null;
+        const paths = [...document.querySelectorAll<SVGPathElement>(".hilo-main")];
+        if (!paths.length) return;
+        const lut = buildLut(paths[0]);
+        if (!lut) return;
+        paths.forEach((p) =>
+          gsap.set(p, { strokeDasharray: lut.total, strokeDashoffset: lut.total })
+        );
+        const setters = paths.map((p) =>
+          gsap.quickTo(p, "strokeDashoffset", { duration: 0.45, ease: "power2.out" })
+        );
+        // La punta del hilo va justo por delante de la lectura.
+        const update = () => {
+          const target = window.scrollY + window.innerHeight * 0.62;
+          const drawn = lenAtY(lut, target);
+          setters.forEach((set) => set(lut.total - drawn));
+        };
+        update();
+        mainST = ScrollTrigger.create({
+          trigger: document.documentElement,
+          start: 0,
+          end: "max",
+          onUpdate: update,
+          onRefresh: update,
         });
       };
       drawMain();
@@ -223,7 +355,7 @@ export default function Fx() {
       });
       gsap.set(".hilo-punto", { opacity: 0 });
       gsap.to(".hilo-punto", {
-        opacity: 0.35,
+        opacity: 1,
         stagger: 0.12,
         ease: "none",
         scrollTrigger: {

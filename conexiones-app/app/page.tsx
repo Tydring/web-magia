@@ -19,17 +19,19 @@ export default function Page() {
         escritorio porque las secciones caen a alturas distintas.
       */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5]">
+        {/*
+          viewBox 1:1 con la pagina: components/Fx.tsx lo ajusta al medir, de
+          modo que una unidad del trazado es un pixel. La ruta de aqui es el
+          respaldo sin JS: baja recta por el margen derecho, seguro en
+          cualquier ancho.
+        */}
         <svg
+          id="hilo-svg"
           className="h-full w-full"
           viewBox="0 0 100 1000"
           preserveAspectRatio="none"
           fill="none"
         >
-          {/*
-            La ruta real la calcula components/Fx.tsx midiendo la pagina.
-            Esta d es el respaldo sin JS: baja recta por el margen derecho,
-            que es seguro en cualquier ancho.
-          */}
           <path
             className="hilo-main hilo-path"
             d="M 50 172 C 72 174, 98 180, 98 196 L 98 900 C 98 926, 72 936, 50 940"
@@ -37,6 +39,7 @@ export default function Page() {
             strokeOpacity="0.28"
             strokeWidth="4.5"
             strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
             style={{ filter: "blur(3px)" }}
           />
           <path
@@ -45,6 +48,7 @@ export default function Page() {
             stroke="#f2543f"
             strokeWidth="1.25"
             strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
           />
         </svg>
       </div>
@@ -79,7 +83,7 @@ export default function Page() {
             <div className="overflow-hidden">
               <p
                 data-line-inner
-                className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent"
+                className="inline-block text-[11px] font-semibold uppercase tracking-[0.3em] text-accent"
               >
                 Magia y mentalismo en vivo
               </p>
@@ -162,83 +166,75 @@ export default function Page() {
           </h2>
         </section>
 
-        {/* 3. LA EXPERIENCIA. Constelacion de personas; en movil vive en los margenes y espacios entre bloques. */}
+        {/*
+          3. LA EXPERIENCIA. Aqui el hilo es la estructura: baja por un canal
+          reservado entre la palabra y la frase, y hace un nudo en cada una de
+          las tres. Los [data-hilo-node] son los puntos por donde pasa; el
+          canal es una columna vacia de la retícula, asi que el hilo entra sin
+          tapar nada. Sin filetes: la linea es la que une.
+        */}
         <section id="experiencia" data-reveal className="relative px-6 py-24 md:py-32">
-          {/*
-            La constelacion: el hilo se ramifica en puntos que se conectan.
-            Vive en el margen derecho (el hilo principal baja por el izquierdo
-            en esta seccion), asi no tapa ningun texto.
-          */}
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
-            <svg
-              className="h-full w-full"
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              fill="none"
-            >
-              <path
-                className="hilo-rama hilo-path"
-                d="M 98.6 8 L 98 24 L 99 40 L 98 56 L 98.8 72 L 98.3 90"
-                stroke="#f2543f"
-                strokeOpacity="0.45"
-                strokeWidth="1"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span className="hilo-punto absolute left-[98.6%] top-[8%] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-bright" />
-            <span className="hilo-punto absolute left-[98%] top-[24%] h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-bright" />
-            <span className="hilo-punto absolute left-[99%] top-[40%] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-bright" />
-            <span className="hilo-punto absolute left-[98%] top-[56%] h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-bright" />
-            <span className="hilo-punto absolute left-[98.8%] top-[72%] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-bright" />
-            <span className="hilo-punto absolute left-[98.3%] top-[90%] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-bright" />
-          </div>
-
           <div className="relative z-10 mx-auto max-w-4xl">
             <p
               data-rc
-              className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent"
+              className="inline-block text-[11px] font-semibold uppercase tracking-[0.3em] text-accent"
             >
               La experiencia
             </p>
 
-            {/*
-              Lista editorial: la palabra grande a la izquierda y la frase a su
-              lado, separadas por filetes. Llena el ancho en vez de dejar
-              huecos, y mantiene la lectura en una sola columna en movil.
-            */}
             {/* DRAFT COPY: Rafael reviews before launch */}
-            <div className="mt-8 border-b border-accent-dim/25 md:mt-10">
+            <div className="mt-14 space-y-12 md:mt-20 md:space-y-16">
               <div
                 data-rc
-                className="grid items-baseline gap-x-12 gap-y-1 border-t border-accent-dim/25 py-6 md:grid-cols-[auto_1fr] md:py-7"
+                className="grid grid-cols-[3rem_1fr] items-baseline gap-y-2 md:grid-cols-[17rem_5rem_1fr]"
               >
-                <h3 className="font-display text-5xl font-normal uppercase leading-none text-ivory md:text-6xl">
+                <span
+                  data-hilo-node
+                  aria-hidden="true"
+                  className="col-start-1 row-start-1 row-span-2 flex items-center justify-center self-center md:col-start-2 md:row-span-1"
+                >
+                  <span className="hilo-punto block h-2 w-2 rounded-full bg-accent-bright" />
+                </span>
+                <h3 className="col-start-2 row-start-1 font-display text-5xl font-normal uppercase leading-none text-ivory md:col-start-1 md:text-6xl">
                   Asombro
                 </h3>
-                <p className="text-base leading-[1.6] text-ivory/70 md:text-xl">
+                <p className="col-start-2 row-start-2 text-base leading-[1.6] text-ivory/70 md:col-start-3 md:row-start-1 md:text-xl">
                   Lo imposible, frente a ti.
                 </p>
               </div>
               <div
                 data-rc
-                className="grid items-baseline gap-x-12 gap-y-1 border-t border-accent-dim/25 py-6 md:grid-cols-[auto_1fr] md:py-7"
+                className="grid grid-cols-[3rem_1fr] items-baseline gap-y-2 md:grid-cols-[17rem_5rem_1fr]"
               >
-                <h3 className="font-display text-5xl font-normal uppercase leading-none text-ivory md:text-6xl">
+                <span
+                  data-hilo-node
+                  aria-hidden="true"
+                  className="col-start-1 row-start-1 row-span-2 flex items-center justify-center self-center md:col-start-2 md:row-span-1"
+                >
+                  <span className="hilo-punto block h-2 w-2 rounded-full bg-accent-bright" />
+                </span>
+                <h3 className="col-start-2 row-start-1 font-display text-5xl font-normal uppercase leading-none text-ivory md:col-start-1 md:text-6xl">
                   Emoción
                 </h3>
-                <p className="text-base leading-[1.6] text-ivory/70 md:text-xl">
+                <p className="col-start-2 row-start-2 text-base leading-[1.6] text-ivory/70 md:col-start-3 md:row-start-1 md:text-xl">
                   Momentos que se sienten personales.
                 </p>
               </div>
               <div
                 data-rc
-                className="grid items-baseline gap-x-12 gap-y-1 border-t border-accent-dim/25 py-6 md:grid-cols-[auto_1fr] md:py-7"
+                className="grid grid-cols-[3rem_1fr] items-baseline gap-y-2 md:grid-cols-[17rem_5rem_1fr]"
               >
-                <h3 className="font-display text-5xl font-normal uppercase leading-none text-ivory md:text-6xl">
+                <span
+                  data-hilo-node
+                  aria-hidden="true"
+                  className="col-start-1 row-start-1 row-span-2 flex items-center justify-center self-center md:col-start-2 md:row-span-1"
+                >
+                  <span className="hilo-punto block h-2 w-2 rounded-full bg-accent-bright" />
+                </span>
+                <h3 className="col-start-2 row-start-1 font-display text-5xl font-normal uppercase leading-none text-ivory md:col-start-1 md:text-6xl">
                   Conexión
                 </h3>
-                <p className="text-base leading-[1.6] text-ivory/70 md:text-xl">
+                <p className="col-start-2 row-start-2 text-base leading-[1.6] text-ivory/70 md:col-start-3 md:row-start-1 md:text-xl">
                   Sales distinto a como entraste.
                 </p>
               </div>
@@ -263,7 +259,7 @@ export default function Page() {
             <div className="relative z-10">
               <p
                 data-rc
-                className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent"
+                className="inline-block text-[11px] font-semibold uppercase tracking-[0.3em] text-accent"
               >
                 El show
               </p>
@@ -300,7 +296,7 @@ export default function Page() {
           <div className="mx-auto max-w-2xl text-center">
             <p
               data-rc
-              className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent"
+              className="inline-block text-[11px] font-semibold uppercase tracking-[0.3em] text-accent"
             >
               Míralo en movimiento
             </p>

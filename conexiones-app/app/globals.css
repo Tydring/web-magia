@@ -85,10 +85,11 @@ button:focus-visible {
   background: radial-gradient(ellipse 120% 90% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.5) 100%);
 }
 
-/* Thread strokes: without JS they stay visible and fully drawn */
-.hilo-path {
-  vector-effect: non-scaling-stroke;
-}
+/*
+  El trazo del hilo. Sin JS se queda con la ruta de respaldo del HTML.
+  No lleva vector-effect: el SVG usa un viewBox 1:1 con la pagina, asi que
+  el grosor y el patron de guiones ya estan en pixeles reales.
+*/
 
 @media (prefers-reduced-motion: reduce) {
   html {
