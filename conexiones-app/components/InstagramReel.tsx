@@ -45,13 +45,20 @@ export default function InstagramReel({ url }: { url: string }) {
     document.body.appendChild(s);
   }, [visible]);
 
+  // overflow-hidden: en pantallas muy estrechas el iframe de Instagram impone
+  // su propio ancho minimo y se saldria del contenedor, invadiendo el margen
+  // por donde baja el hilo.
   return (
-    <div ref={ref} className="mx-auto w-full max-w-[420px]" style={{ minHeight: 600 }}>
+    <div
+      ref={ref}
+      className="mx-auto w-full max-w-[420px] overflow-hidden"
+      style={{ minHeight: 600 }}
+    >
       <blockquote
         className="instagram-media"
         data-instgrm-permalink={url}
         data-instgrm-version="14"
-        style={{ background: "#000", border: 0, margin: "0 auto", maxWidth: 540, minWidth: 280, width: "100%" }}
+        style={{ background: "#000", border: 0, margin: "0 auto", maxWidth: "100%", minWidth: 0, width: "100%" }}
       >
         <a
           href={url}

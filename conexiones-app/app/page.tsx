@@ -163,7 +163,7 @@ export default function Page() {
         </section>
 
         {/* 3. LA EXPERIENCIA. Constelacion de personas; en movil vive en los margenes y espacios entre bloques. */}
-        <section id="experiencia" data-reveal className="relative px-6 py-28 md:py-36">
+        <section id="experiencia" data-reveal className="relative px-6 py-24 md:py-32">
           {/*
             La constelacion: el hilo se ramifica en puntos que se conectan.
             Vive en el margen derecho (el hilo principal baja por el izquierdo
@@ -194,7 +194,7 @@ export default function Page() {
             <span className="hilo-punto absolute left-[98.3%] top-[90%] h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-bright" />
           </div>
 
-          <div className="relative z-10 mx-auto max-w-3xl">
+          <div className="relative z-10 mx-auto max-w-4xl">
             <p
               data-rc
               className="text-[11px] font-semibold uppercase tracking-[0.3em] text-accent"
@@ -202,29 +202,43 @@ export default function Page() {
               La experiencia
             </p>
 
+            {/*
+              Lista editorial: la palabra grande a la izquierda y la frase a su
+              lado, separadas por filetes. Llena el ancho en vez de dejar
+              huecos, y mantiene la lectura en una sola columna en movil.
+            */}
             {/* DRAFT COPY: Rafael reviews before launch */}
-            <div className="mt-10 space-y-10 md:mt-14 md:space-y-16">
-              <div data-rc className="max-w-md">
-                <h3 className="font-display text-3xl font-normal uppercase text-ivory md:text-4xl">
+            <div className="mt-8 border-b border-accent-dim/25 md:mt-10">
+              <div
+                data-rc
+                className="grid items-baseline gap-x-12 gap-y-1 border-t border-accent-dim/25 py-6 md:grid-cols-[auto_1fr] md:py-7"
+              >
+                <h3 className="font-display text-5xl font-normal uppercase leading-none text-ivory md:text-6xl">
                   Asombro
                 </h3>
-                <p className="mt-3 text-base leading-[1.7] text-ivory/75 md:text-lg">
+                <p className="text-base leading-[1.6] text-ivory/70 md:text-xl">
                   Lo imposible, frente a ti.
                 </p>
               </div>
-              <div data-rc className="max-w-md md:ml-auto md:text-right">
-                <h3 className="font-display text-3xl font-normal uppercase text-ivory md:text-4xl">
+              <div
+                data-rc
+                className="grid items-baseline gap-x-12 gap-y-1 border-t border-accent-dim/25 py-6 md:grid-cols-[auto_1fr] md:py-7"
+              >
+                <h3 className="font-display text-5xl font-normal uppercase leading-none text-ivory md:text-6xl">
                   Emoción
                 </h3>
-                <p className="mt-3 text-base leading-[1.7] text-ivory/75 md:text-lg">
+                <p className="text-base leading-[1.6] text-ivory/70 md:text-xl">
                   Momentos que se sienten personales.
                 </p>
               </div>
-              <div data-rc className="max-w-md md:mx-auto md:text-center">
-                <h3 className="font-display text-3xl font-normal uppercase text-ivory md:text-4xl">
+              <div
+                data-rc
+                className="grid items-baseline gap-x-12 gap-y-1 border-t border-accent-dim/25 py-6 md:grid-cols-[auto_1fr] md:py-7"
+              >
+                <h3 className="font-display text-5xl font-normal uppercase leading-none text-ivory md:text-6xl">
                   Conexión
                 </h3>
-                <p className="mt-3 text-base leading-[1.7] text-ivory/75 md:text-lg">
+                <p className="text-base leading-[1.6] text-ivory/70 md:text-xl">
                   Sales distinto a como entraste.
                 </p>
               </div>

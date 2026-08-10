@@ -17,7 +17,29 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const MARGIN_L = 2;
 const MARGIN_R = 98;
-const CLEAR = 6; // px de aire alrededor de cada elemento
+const CLEAR = 10; // px de aire alrededor de cada elemento
+
+/*
+  Posicion final del elemento, no la que tiene mientras se revela.
+  Los bloques con data-rc entran desplazados 24px; si midieramos eso,
+  creeriamos que hay un hueco donde en realidad va a haber texto.
+*/
+function settledBounds(el: HTMLElement) {
+  const r = el.getBoundingClientRect();
+  let dy = 0;
+  const moved = el.closest<HTMLElement>("[data-rc], [data-line-inner]");
+  if (moved) {
+    const tr = getComputedStyle(moved).transform;
+    if (tr && tr !== "none") {
+      try {
+        dy = new DOMMatrixReadOnly(tr).f;
+      } catch {
+        dy = 0;
+      }
+    }
+  }
+  return { top: r.top + window.scrollY - dy, bottom: r.bottom + window.scrollY - dy };
+}
 
 function contentBoxes() {
   const sel =
@@ -28,7 +50,8 @@ function contentBoxes() {
     if (el.tagName === "IMG" && el.closest("#hero")) return;
     const r = el.getBoundingClientRect();
     if (r.width < 4 || r.height < 4) return;
-    out.push({ t: r.top + window.scrollY - CLEAR, b: r.bottom + window.scrollY + CLEAR });
+    const b = settledBounds(el);
+    out.push({ t: b.top - CLEAR, b: b.bottom + CLEAR });
   });
   return out;
 }
