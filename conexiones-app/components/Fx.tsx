@@ -18,6 +18,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 const MARGIN_L = 2;
 const MARGIN_R = 98;
 const CLEAR = 10; // px de aire alrededor de cada elemento
+// Cuanto se separa el hilo del borde de la pantalla. En un movil el margen
+// lateral es de 24px, asi que ahi tiene que ser mucho menor que en escritorio.
+const edgeInset = (W: number) => Math.max(8, Math.min(26, W * 0.018));
 
 /*
   Posicion final del elemento, no la que tiene mientras se revela.
@@ -96,6 +99,28 @@ function nodePoints() {
 /** Redondeo corto para que la ruta no sea una cadena enorme. */
 const r = (n: number) => Math.round(n * 10) / 10;
 
+/*
+  Bandas de aire libre a cada lado del contenido, para un tramo vertical dado.
+  El hilo cuelga dentro de la banda, no pegado al borde de la pantalla: pegado
+  al borde parece un marco de la interfaz, no un hilo.
+*/
+function bandRight(y1: number, y2: number, boxes: Box[], W: number): [number, number] {
+  let maxR = 0;
+  for (const b of boxes) if (b.b > y1 && b.t < y2) maxR = Math.max(maxR, b.r);
+  const edge = edgeInset(W);
+  const hi = W - edge;
+  const lo = Math.min(maxR + 2, hi);
+  return lo < hi ? [lo, hi] : [hi, hi];
+}
+
+function bandLeft(y1: number, y2: number, boxes: Box[], W: number): [number, number] {
+  let minL = W;
+  for (const b of boxes) if (b.b > y1 && b.t < y2) minL = Math.min(minL, b.l);
+  const lo = edgeInset(W);
+  const hi = Math.max(minL - 2, lo);
+  return lo < hi ? [lo, hi] : [lo, lo];
+}
+
 function buildPath(): { d: string; w: number; h: number } | null {
   const H = document.documentElement.scrollHeight;
   const W = document.documentElement.clientWidth;
@@ -107,42 +132,74 @@ function buildPath(): { d: string; w: number; h: number } | null {
 
   const boxes = contentBoxes();
   const wins = freeWindows(fromY, toY, boxes);
-  if (wins.length < 2) return null;
+  if (!wins.length) return null;
 
-  const ML = W * 0.02;
-  const MR = W * 0.98;
   const mid = W / 2;
   const nodes = nodePoints();
 
-  const [fa, fb] = wins[0];
-  const startY = fa + Math.min(20, (fb - fa) * 0.35);
-  const settleY = Math.min(fb - 2, startY + 26);
-  let x = MR;
-  let d = `M ${mid} ${r(startY)} C ${r(mid + W * 0.15)} ${r(startY + 5)}, ${r(x)} ${r(startY + 11)}, ${r(x)} ${r(settleY)}`;
-  let lastY = settleY;
-  let lastCross = lastY;
+  let cx = mid;
+  let cy = 0;
+  let d = "";
 
   /*
-    Huecos por donde entra y sale del canal. Se elige el mas lejano posible en
-    cada sentido (mientras la bajada vertical por el canal siga libre), para
-    que el giro sea un trazo largo y no un codo apretado.
+    Tramo vertical con una ondulacion lenta dentro de la banda libre. Un hilo
+    colgando nunca es una recta perfecta; la amplitud se limita al aire que
+    haya, asi que en movil casi no se mece y en escritorio se nota.
   */
+  /*
+    Donde cuelga el hilo en un tramo: dentro de la banda libre de TODO el
+    tramo, lo mas cerca posible de su destino. Se decide antes de bajar, para
+    que la linea no tenga que corregirse por el camino.
+  */
+  const hangSpot = (y1: number, y2: number, side: "R" | "L", toward: number) => {
+    const [lo, hi] = side === "R" ? bandRight(y1, y2, boxes, W) : bandLeft(y1, y2, boxes, W);
+    const amp = Math.min(9, Math.max(0, (hi - lo) / 2 - 2));
+    const base = Math.min(Math.max(toward, lo + amp), hi - amp);
+    return { base, amp };
+  };
+
+  /** Tramo vertical: una sola x, con un temblor minimo. */
+  const hangTo = (yEnd: number, baseX: number, amp: number) => {
+    const span = yEnd - cy;
+    if (span <= 24) return;
+    const segs = Math.max(1, Math.round(span / 560));
+    const step = span / segs;
+    for (let i = 1; i <= segs; i++) {
+      const yN = cy + step;
+      const xN = i === segs ? baseX : baseX + (i % 2 === 1 ? amp : -amp);
+      d += ` C ${r(cx)} ${r(cy + step * 0.5)}, ${r(xN)} ${r(yN - step * 0.5)}, ${r(xN)} ${r(yN)}`;
+      cx = xN;
+      cy = yN;
+    }
+  };
+
+  /** Traslado lateral suave, usando todo el hueco disponible. */
+  const glideTo = (xEnd: number, y1: number, y2: number) => {
+    if (y1 > cy) d += ` L ${r(cx)} ${r(y1)}`;
+    const dy = Math.max(24, y2 - y1);
+    d += ` C ${r(cx)} ${r(y1 + dy * 0.55)}, ${r(xEnd)} ${r(y2 - dy * 0.55)}, ${r(xEnd)} ${r(y2)}`;
+    cx = xEnd;
+    cy = y2;
+  };
+
+  // Huecos para entrar y salir del canal de LA EXPERIENCIA.
   let entryWin: [number, number] | null = null;
   let exitWin: [number, number] | null = null;
+  const probeY = wins[0][0];
   if (nodes.length) {
-    const cx = nodes[0].x;
+    const chan = nodes[0].x;
     const firstY = nodes[0].y;
     const lastNodeY = nodes[nodes.length - 1].y;
     for (const w of wins) {
-      if (w[1] > firstY || w[0] < lastY - 1) continue;
-      if (corridorClear(cx, w[1] - 2, firstY, boxes)) {
+      if (w[1] > firstY || w[0] < probeY - 1) continue;
+      if (corridorClear(chan, w[1] - 2, firstY, boxes)) {
         entryWin = w;
         break;
       }
     }
-    for (const w of wins.slice(0, -1)) {
+    for (const w of wins) {
       if (w[0] < lastNodeY) continue;
-      if (!corridorClear(cx, lastNodeY, w[0] + 2, boxes)) break;
+      if (!corridorClear(chan, lastNodeY, w[0] + 2, boxes)) break;
       exitWin = w;
     }
     if (!entryWin || !exitWin) {
@@ -151,59 +208,46 @@ function buildPath(): { d: string; w: number; h: number } | null {
     }
   }
 
-  const minGap = H * 0.1;
-  const crossAt = ([a, b]: [number, number]) => {
-    const yc = (a + b) / 2;
-    if (yc - lastCross < minGap) return;
-    const k = Math.min((b - a) / 2 - 4, 70);
-    if (k < 12) return;
-    const nx = x === MR ? ML : MR;
-    d += ` L ${r(x)} ${r(yc - k)} C ${r(x)} ${r(yc)}, ${r(nx)} ${r(yc)}, ${r(nx)} ${r(yc + k)}`;
-    x = nx;
-    lastCross = yc;
-    lastY = yc + k;
-  };
+  const chanX = nodes.length ? nodes[0].x : mid;
+  const tailY = toY - 40;
 
-  const middle = wins.slice(1, -1);
+  // Arranque
+  const [fa, fb] = wins[0];
+  const startY = fa + Math.min(18, (fb - fa) * 0.3);
+  const settleY = Math.min(fb - 4, startY + Math.max(60, (fb - startY) * 0.7));
+  cy = startY;
+  d = `M ${r(mid)} ${r(startY)}`;
+
+  // El lado del tramo previo se decide por cercania al canal, y la x se
+  // calcula sobre TODO el tramo, no sobre el hueco donde empieza.
+  const descentEnd = entryWin ? entryWin[0] + 6 : tailY;
+  const spotL = hangSpot(settleY, descentEnd, "L", chanX);
+  const spotR = hangSpot(settleY, descentEnd, "R", chanX);
+  const spotA =
+    Math.abs(spotL.base - chanX) <= Math.abs(spotR.base - chanX) ? spotL : spotR;
+
+  glideTo(spotA.base, startY, settleY);
+  hangTo(descentEnd, spotA.base, spotA.amp);
 
   if (entryWin && exitWin) {
-    for (const w of middle) {
-      if (w[0] >= entryWin[0]) break;
-      crossAt(w);
-    }
-
-    // Entra al canal
-    const cx = nodes[0].x;
-    const [ea, eb] = entryWin;
-    const y1 = Math.max(lastY + 6, ea + Math.min(12, (eb - ea) * 0.25));
-    const y2 = Math.min(eb - 3, y1 + Math.max(16, (eb - y1) * 0.6));
-    d += ` L ${r(x)} ${r(y1)} C ${r(x)} ${r((y1 + y2) / 2)}, ${r(cx)} ${r((y1 + y2) / 2)}, ${r(cx)} ${r(y2)}`;
-
-    // Enhebra los nudos
+    const chan = nodes[0].x;
+    // Entra al canal aprovechando el hueco entero
+    glideTo(chan, Math.max(cy, entryWin[0] + 4), entryWin[1] - 4);
+    // Enhebra los nudos: aqui si es una recta tensa, es un hilo con nudos
     for (const n of nodes) d += ` L ${r(n.x)} ${r(n.y)}`;
-
-    // Sale del canal hacia el margen izquierdo
-    const lx = nodes[nodes.length - 1].x;
-    const [xa, xb] = exitWin;
-    const y3 = Math.max(nodes[nodes.length - 1].y + 6, xa + 4);
-    const y4 = Math.min(xb - 3, y3 + Math.max(16, (xb - y3) * 0.5));
-    d += ` L ${r(lx)} ${r(y3)} C ${r(lx)} ${r((y3 + y4) / 2)}, ${r(ML)} ${r((y3 + y4) / 2)}, ${r(ML)} ${r(y4)}`;
-    x = ML;
-    lastY = y4;
-    lastCross = y4;
-
-    for (const w of middle) {
-      if (w[0] <= exitWin[0]) continue;
-      crossAt(w);
-    }
-  } else {
-    for (const w of middle) crossAt(w);
+    cx = nodes[nodes.length - 1].x;
+    cy = nodes[nodes.length - 1].y;
+    // Sale del canal y sigue colgando por el lado mas cercano
+    const outL = hangSpot(exitWin[1], tailY, "L", chan);
+    const outR = hangSpot(exitWin[1], tailY, "R", chan);
+    const spotB = Math.abs(outL.base - chan) <= Math.abs(outR.base - chan) ? outL : outR;
+    glideTo(spotB.base, Math.max(cy + 6, exitWin[0] + 4), exitWin[1] - 4);
+    hangTo(tailY, spotB.base, spotB.amp);
   }
 
-  const [la, lb] = wins[wins.length - 1];
-  const endY = Math.min(lb - 4, toY - 4);
-  const curlY = Math.max(lastY + 8, Math.min(la + 6, endY - 24));
-  d += ` L ${r(x)} ${r(curlY)} C ${r(x)} ${r(endY - 8)}, ${r(mid + W * 0.14)} ${r(endY)}, ${r(mid)} ${r(endY)}`;
+  // Final: se recoge un poco hacia dentro y termina, como una punta suelta.
+  const inward = cx < mid ? cx + W * 0.05 : cx - W * 0.05;
+  d += ` C ${r(cx)} ${r(cy + 24)}, ${r(inward)} ${r(toY - 16)}, ${r(inward)} ${r(toY - 6)}`;
   return { d, w: W, h: H };
 }
 

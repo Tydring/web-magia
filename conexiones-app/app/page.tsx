@@ -36,18 +36,20 @@ export default function Page() {
             className="hilo-main hilo-path"
             d="M 50 172 C 72 174, 98 180, 98 196 L 98 900 C 98 926, 72 936, 50 940"
             stroke="#f2543f"
-            strokeOpacity="0.28"
-            strokeWidth="4.5"
+            strokeOpacity="0.16"
+            strokeWidth="6"
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
-            style={{ filter: "blur(3px)" }}
+            style={{ filter: "blur(4px)" }}
           />
           <path
             className="hilo-main hilo-path"
             d="M 50 172 C 72 174, 98 180, 98 196 L 98 900 C 98 926, 72 936, 50 940"
             stroke="#f2543f"
-            strokeWidth="1.25"
+            strokeOpacity="0.72"
+            strokeWidth="1"
             strokeLinecap="round"
+            strokeLinejoin="round"
             vectorEffect="non-scaling-stroke"
           />
         </svg>
