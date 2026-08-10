@@ -32,6 +32,14 @@ Sitio nuevo apuntando a este directorio (`conexiones-app/`):
   `public/img/titulo-conexiones.png` y sustituir el h1 del hero.
 - Una sola animación protagonista: el hilo (SVG, GSAP). Todo lo demás es capa
   silenciosa. `prefers-reduced-motion` deja el hilo dibujado y estático.
+- Ley del hilo, medida en `components/Fx.tsx` sobre la página real: cuelga en
+  curvas largas y nunca hace esquinas (cada desvío lateral cae 1.9 px por cada
+  px que se mueve de lado, y las manijas de cada bézier miden 0.45 del tramo,
+  así que los controles no se cruzan). Cuando su camino cruza un elemento no lo
+  esquiva ni lo tapa: se corta y reaparece al otro lado. Los cortes son un
+  patrón de guiones, no otra ruta, para que la curva siga siendo cuatro béziers
+  y repintarla en cada scroll salga barato en un teléfono. El avance con el
+  scroll lo hace un recorte (`#hilo-clip-rect`), no el desfase de los guiones.
 
 ## Pendientes antes del lanzamiento
 

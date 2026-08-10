@@ -12,11 +12,10 @@ export default function Page() {
       <Fx />
 
       {/*
-        El hilo: una linea roja continua, como las lineas del show. Decorativa.
-        Regla: nunca pasa por encima de ningun elemento. Recorre los margenes
-        exteriores (x=2 / x=98) y solo cruza la pagina por los huecos medidos
-        entre secciones. Las coordenadas de cruce son distintas en movil y en
-        escritorio porque las secciones caen a alturas distintas.
+        El hilo: una linea roja, como las lineas del show. Decorativa.
+        Reglas, medidas en components/Fx.tsx: cuelga en curvas largas y no hace
+        esquinas; y cuando su camino cruza un elemento no lo esquiva ni lo tapa,
+        se corta y reaparece al otro lado, como si pasara por detras.
       */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5]">
         {/*
@@ -32,26 +31,37 @@ export default function Page() {
           preserveAspectRatio="none"
           fill="none"
         >
-          <path
-            className="hilo-main hilo-path"
-            d="M 50 172 C 72 174, 98 180, 98 196 L 98 900 C 98 926, 72 936, 50 940"
-            stroke="#f2543f"
-            strokeOpacity="0.16"
-            strokeWidth="6"
-            strokeLinecap="round"
-            vectorEffect="non-scaling-stroke"
-            style={{ filter: "blur(4px)" }}
-          />
-          <path
-            className="hilo-main hilo-path"
-            d="M 50 172 C 72 174, 98 180, 98 196 L 98 900 C 98 926, 72 936, 50 940"
-            stroke="#f2543f"
-            strokeOpacity="0.72"
-            strokeWidth="1"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            vectorEffect="non-scaling-stroke"
-          />
+          {/*
+            El recorte dibuja el hilo hasta donde va leyendo el visitante:
+            Fx.tsx le ajusta el alto con el scroll. Sin JS se queda entero.
+          */}
+          <defs>
+            <clipPath id="hilo-clip">
+              <rect id="hilo-clip-rect" x="0" y="0" width="100" height="1000" />
+            </clipPath>
+          </defs>
+          <g clipPath="url(#hilo-clip)">
+            <path
+              className="hilo-main hilo-path"
+              d="M 50 172 C 72 214, 98 260, 98 320 L 98 860 C 98 916, 72 930, 50 940"
+              stroke="#f2543f"
+              strokeOpacity="0.16"
+              strokeWidth="6"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+              style={{ filter: "blur(4px)" }}
+            />
+            <path
+              className="hilo-main hilo-path"
+              d="M 50 172 C 72 214, 98 260, 98 320 L 98 860 C 98 916, 72 930, 50 940"
+              stroke="#f2543f"
+              strokeOpacity="0.72"
+              strokeWidth="1"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              vectorEffect="non-scaling-stroke"
+            />
+          </g>
         </svg>
       </div>
 

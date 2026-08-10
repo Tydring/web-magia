@@ -9,42 +9,69 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
   Everything else is the quiet layer: masked title lines, 24px rises, image settles.
   With prefers-reduced-motion the thread renders fully drawn and every state is instant.
 
-  El hilo nunca pasa por encima de ningun elemento. En vez de una curva fija,
-  la ruta se calcula midiendo la pagina: el hilo baja por los margenes
-  exteriores y solo cruza por los huecos reales entre secciones. Asi es
-  correcto en cualquier ancho de pantalla, no solo en los que probamos.
+  Ley del hilo. Es un hilo colgando, no una cañeria: solo curvas largas, ni una
+  esquina. Dos reglas lo garantizan a cualquier ancho:
+    1. Cada desvio lateral se resuelve en SWEEP px de caida por px de
+       desplazamiento, con un minimo de MIN_SWEEP. Nada de codos.
+    2. Las manijas de cada curva miden 0.45 del tramo, menos de la mitad, asi
+       que los puntos de control nunca se cruzan y la linea no se dobla sobre
+       si misma.
+  Y cuando el camino cruza un elemento, el hilo ni lo esquiva ni lo tapa: se
+  corta a CUT_PAD del elemento y reaparece al otro lado, como si pasara por
+  detras de la pagina. Cortarlo es mas bonito que retorcerlo.
 */
 
-const MARGIN_L = 2;
-const MARGIN_R = 98;
-const CLEAR = 10; // px de aire alrededor de cada elemento
+const CLEAR = 10; // px de aire para decidir por donde cuelga
+/*
+  El hilo se corta a esta distancia del elemento que cruza. Tiene que ser menor
+  que el aire que deja la banda al colgar (CLEAR), o en un movil, donde el
+  margen de pagina es de 24px, la propia bajada por el costado se cortaria
+  entera y el hilo desapareceria durante secciones completas.
+*/
+const CUT_PAD = 8;
+const MIN_RUN = 30; // px: un trozo mas corto que esto es mugre, no se dibuja
+const SAMPLE = 6; // px entre muestras al calcular los cortes
+const SWEEP = 1.9; // px de caida por cada px de desplazamiento lateral
+const MIN_SWEEP = 96; // ninguna curva lateral se resuelve en menos que esto
 // Cuanto se separa el hilo del borde de la pantalla. En un movil el margen
 // lateral es de 24px, asi que ahi tiene que ser mucho menor que en escritorio.
 const edgeInset = (W: number) => Math.max(8, Math.min(26, W * 0.018));
 
-/*
-  Posicion final del elemento, no la que tiene mientras se revela.
-  Los bloques con data-rc entran desplazados 24px; si midieramos eso,
-  creeriamos que hay un hueco donde en realidad va a haber texto.
-*/
-function settledBounds(el: HTMLElement) {
-  const r = el.getBoundingClientRect();
-  let dy = 0;
-  const moved = el.closest<HTMLElement>("[data-rc], [data-line-inner]");
-  if (moved) {
-    const tr = getComputedStyle(moved).transform;
-    if (tr && tr !== "none") {
-      try {
-        dy = new DOMMatrixReadOnly(tr).f;
-      } catch {
-        dy = 0;
-      }
-    }
-  }
-  return { top: r.top + window.scrollY - dy, bottom: r.bottom + window.scrollY - dy };
-}
-
 type Box = { t: number; b: number; l: number; r: number };
+type Pt = { x: number; y: number };
+
+/*
+  Sitio final del elemento, no el que ocupa mientras se revela. Los bloques con
+  data-rc entran desplazados 24px y las imagenes con data-zoom empiezan un 5%
+  mas grandes: midiendo eso creeriamos que hay texto donde habra un hueco, o
+  que la foto llega mas al borde de lo que va a llegar. Se deshace el
+  desplazamiento y la escala del ancestro animado, y queda la caja de reposo.
+*/
+function settledBounds(el: HTMLElement): Box {
+  const r = el.getBoundingClientRect();
+  const box = { t: r.top + window.scrollY, b: r.bottom + window.scrollY, l: r.left, r: r.right };
+  const moved = el.closest<HTMLElement>("[data-rc], [data-line-inner], [data-zoom]");
+  if (!moved) return box;
+  const tr = getComputedStyle(moved).transform;
+  if (!tr || tr === "none") return box;
+  let m: DOMMatrixReadOnly;
+  try {
+    m = new DOMMatrixReadOnly(tr);
+  } catch {
+    return box;
+  }
+  // La escala tiene su origen en el centro del elemento animado, ya sin mover.
+  const mr = moved.getBoundingClientRect();
+  const cx = mr.left + mr.width / 2 - m.e;
+  const cy = mr.top + window.scrollY + mr.height / 2 - m.f;
+  const undo = (v: number, c: number, k: number) => (Math.abs(k) < 0.001 ? v : c + (v - c) / k);
+  return {
+    t: undo(box.t - m.f, cy, m.d),
+    b: undo(box.b - m.f, cy, m.d),
+    l: undo(box.l - m.e, cx, m.a),
+    r: undo(box.r - m.e, cx, m.a),
+  };
+}
 
 function contentBoxes(): Box[] {
   const sel =
@@ -55,43 +82,21 @@ function contentBoxes(): Box[] {
     if (el.tagName === "IMG" && el.closest("#hero")) return;
     const r = el.getBoundingClientRect();
     if (r.width < 4 || r.height < 4) return;
-    const b = settledBounds(el);
-    out.push({ t: b.top - CLEAR, b: b.bottom + CLEAR, l: r.left - CLEAR, r: r.right + CLEAR });
+    out.push(settledBounds(el));
   });
   return out;
 }
 
-/** ¿Puede el hilo bajar en vertical por x entre y1 e y2 sin tocar nada? */
-function corridorClear(xPx: number, y1: number, y2: number, boxes: Box[]) {
-  return !boxes.some((b) => b.b > y1 && b.t < y2 && b.l < xPx && b.r > xPx);
-}
-
-/** Franjas horizontales donde no hay ningun elemento: por ahi puede cruzar. */
-function freeWindows(fromY: number, toY: number, boxes: { t: number; b: number }[]) {
-  const step = 4;
-  const wins: [number, number][] = [];
-  let start: number | null = null;
-  for (let y = fromY; y < toY; y += step) {
-    const busy = boxes.some((b) => b.b > y && b.t < y + step);
-    if (!busy) {
-      if (start === null) start = y;
-    } else if (start !== null) {
-      wins.push([start, y]);
-      start = null;
-    }
-  }
-  if (start !== null) wins.push([start, toY]);
-  return wins.filter(([a, b]) => b - a >= 36);
-}
+const inflate = (b: Box, p: number): Box => ({ t: b.t - p, b: b.b + p, l: b.l - p, r: b.r + p });
 
 /** Puntos por donde el hilo debe pasar: el canal de LA EXPERIENCIA. */
-function nodePoints() {
-  const out: { x: number; y: number }[] = [];
+function nodePoints(): Pt[] {
+  const out: Pt[] = [];
   document.querySelectorAll<HTMLElement>("[data-hilo-node]").forEach((el) => {
     const rect = el.getBoundingClientRect();
     if (rect.width < 1 && rect.height < 1) return;
     const b = settledBounds(el);
-    out.push({ x: rect.left + rect.width / 2, y: (b.top + b.bottom) / 2 });
+    out.push({ x: (b.l + b.r) / 2, y: (b.t + b.b) / 2 });
   });
   return out.sort((a, b) => a.y - b.y);
 }
@@ -121,7 +126,33 @@ function bandLeft(y1: number, y2: number, boxes: Box[], W: number): [number, num
   return lo < hi ? [lo, hi] : [lo, lo];
 }
 
-function buildPath(): { d: string; w: number; h: number } | null {
+/*
+  Caida minima que necesita un desvio lateral. Es la regla que impide los
+  codos: cuanto mas se mueve el hilo de lado, mas tiene que caer para hacerlo.
+*/
+const sweep = (dx: number) => Math.max(MIN_SWEEP, Math.abs(dx) * SWEEP);
+
+/*
+  De puntos a curva. Cada tramo entra y sale en vertical, y las manijas miden
+  0.45 del alto, menos de la mitad: los controles no se cruzan nunca, asi que
+  la linea no puede hacer un gancho ni doblarse sobre si misma.
+*/
+function smooth(pts: Pt[]): string {
+  let d = `M ${r(pts[0].x)} ${r(pts[0].y)}`;
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1];
+    const b = pts[i];
+    if (Math.abs(b.x - a.x) < 0.4) {
+      d += ` L ${r(b.x)} ${r(b.y)}`;
+      continue;
+    }
+    const h = (b.y - a.y) * 0.45;
+    d += ` C ${r(a.x)} ${r(a.y + h)}, ${r(b.x)} ${r(b.y - h)}, ${r(b.x)} ${r(b.y)}`;
+  }
+  return d;
+}
+
+function buildPath(): { d: string; cuts: Box[]; w: number; h: number } | null {
   const H = document.documentElement.scrollHeight;
   const W = document.documentElement.clientWidth;
   if (!H || !W) return null;
@@ -130,26 +161,18 @@ function buildPath(): { d: string; w: number; h: number } | null {
   const fromY = hero ? hero.getBoundingClientRect().bottom + window.scrollY : 0;
   const toY = footer ? footer.getBoundingClientRect().top + window.scrollY : H;
 
-  const boxes = contentBoxes();
-  const wins = freeWindows(fromY, toY, boxes);
-  if (!wins.length) return null;
-
-  const mid = W / 2;
+  const raw = contentBoxes();
+  const boxes = raw.map((b) => inflate(b, CLEAR));
   const nodes = nodePoints();
-
-  let cx = mid;
-  let cy = 0;
-  let d = "";
+  const mid = W / 2;
+  const startY = fromY + 28;
+  const endY = toY - 8;
+  if (endY - startY < 240) return null;
 
   /*
-    Tramo vertical con una ondulacion lenta dentro de la banda libre. Un hilo
-    colgando nunca es una recta perfecta; la amplitud se limita al aire que
-    haya, asi que en movil casi no se mece y en escritorio se nota.
-  */
-  /*
-    Donde cuelga el hilo en un tramo: dentro de la banda libre de TODO el
-    tramo, lo mas cerca posible de su destino. Se decide antes de bajar, para
-    que la linea no tenga que corregirse por el camino.
+    Donde cuelga el hilo en un tramo: dentro de la banda de aire libre de TODO
+    el tramo, lo mas cerca posible de su destino. Se decide antes de bajar,
+    para que la linea no tenga que corregirse por el camino.
   */
   const hangSpot = (y1: number, y2: number, side: "R" | "L", toward: number) => {
     const [lo, hi] = side === "R" ? bandRight(y1, y2, boxes, W) : bandLeft(y1, y2, boxes, W);
@@ -158,148 +181,143 @@ function buildPath(): { d: string; w: number; h: number } | null {
     return { base, amp };
   };
 
-  /** Tramo vertical: una sola x, con un temblor minimo. */
-  const hangTo = (yEnd: number, baseX: number, amp: number) => {
-    const span = yEnd - cy;
+  /** El lado con la banda mas cercana al sitio al que va el hilo. */
+  const pickSide = (y1: number, y2: number, toward: number) => {
+    const l = hangSpot(y1, y2, "L", toward);
+    const rr = hangSpot(y1, y2, "R", toward);
+    return Math.abs(l.base - toward) <= Math.abs(rr.base - toward) ? l : rr;
+  };
+
+  const pts: Pt[] = [{ x: mid, y: startY }];
+  const at = () => pts[pts.length - 1];
+  const push = (x: number, y: number) => pts.push({ x, y: Math.max(y, at().y + 8) });
+
+  /** Tramo colgado: una sola x, con un mecido lento y larguisimo. */
+  const hangTo = (yEnd: number, x: number, amp: number) => {
+    const span = yEnd - at().y;
     if (span <= 24) return;
-    const segs = Math.max(1, Math.round(span / 560));
+    const segs = Math.max(1, Math.round(span / 620));
     const step = span / segs;
+    const from = at().y;
     for (let i = 1; i <= segs; i++) {
-      const yN = cy + step;
-      const xN = i === segs ? baseX : baseX + (i % 2 === 1 ? amp : -amp);
-      d += ` C ${r(cx)} ${r(cy + step * 0.5)}, ${r(xN)} ${r(yN - step * 0.5)}, ${r(xN)} ${r(yN)}`;
-      cx = xN;
-      cy = yN;
+      push(i === segs ? x : x + (i % 2 === 1 ? amp : -amp), from + step * i);
     }
   };
 
-  /** Traslado lateral suave, usando todo el hueco disponible. */
-  const glideTo = (xEnd: number, y1: number, y2: number) => {
-    if (y1 > cy) d += ` L ${r(cx)} ${r(y1)}`;
-    const dy = Math.max(24, y2 - y1);
-    d += ` C ${r(cx)} ${r(y1 + dy * 0.55)}, ${r(xEnd)} ${r(y2 - dy * 0.55)}, ${r(xEnd)} ${r(y2)}`;
-    cx = xEnd;
-    cy = y2;
-  };
-
-  // Huecos para entrar y salir del canal de LA EXPERIENCIA.
-  let entryWin: [number, number] | null = null;
-  let exitWin: [number, number] | null = null;
-  const probeY = wins[0][0];
-  if (nodes.length) {
-    const chan = nodes[0].x;
-    const firstY = nodes[0].y;
-    const lastNodeY = nodes[nodes.length - 1].y;
-    for (const w of wins) {
-      if (w[1] > firstY || w[0] < probeY - 1) continue;
-      if (corridorClear(chan, w[1] - 2, firstY, boxes)) {
-        entryWin = w;
-        break;
-      }
-    }
-    for (const w of wins) {
-      if (w[0] < lastNodeY) continue;
-      if (!corridorClear(chan, lastNodeY, w[0] + 2, boxes)) break;
-      exitWin = w;
-    }
-    if (!entryWin || !exitWin) {
-      entryWin = null;
-      exitWin = null;
-    }
-  }
+  // La punta suelta del final se recoge hacia dentro, y esa curva tambien
+  // necesita su caida: se reserva antes de decidir hasta donde cuelga el hilo.
+  const inwardDx = W * 0.06;
+  const tailY = endY - sweep(inwardDx);
 
   const chanX = nodes.length ? nodes[0].x : mid;
-  const tailY = toY - 40;
+  const knotTop = nodes.length ? nodes[0].y : 0;
+  const knotBottom = nodes.length ? nodes[nodes.length - 1].y : 0;
+  // Solo se enhebra si hay sitio para entrar y salir del canal en curva.
+  const threading =
+    nodes.length > 0 &&
+    knotTop - startY > sweep(chanX - mid) &&
+    tailY - knotBottom > MIN_SWEEP;
 
-  // Arranque
-  const [fa, fb] = wins[0];
-  const startY = fa + Math.min(18, (fb - fa) * 0.3);
-  const settleY = Math.min(fb - 4, startY + Math.max(60, (fb - startY) * 0.7));
-  cy = startY;
-  d = `M ${r(mid)} ${r(startY)}`;
-
-  // El lado del tramo previo se decide por cercania al canal, y la x se
-  // calcula sobre TODO el tramo, no sobre el hueco donde empieza.
-  const descentEnd = entryWin ? entryWin[0] + 6 : tailY;
-  const spotL = hangSpot(settleY, descentEnd, "L", chanX);
-  const spotR = hangSpot(settleY, descentEnd, "R", chanX);
-  const spotA =
-    Math.abs(spotL.base - chanX) <= Math.abs(spotR.base - chanX) ? spotL : spotR;
-
-  glideTo(spotA.base, startY, settleY);
-  hangTo(descentEnd, spotA.base, spotA.amp);
-
-  if (entryWin && exitWin) {
-    const chan = nodes[0].x;
-    // Entra al canal aprovechando el hueco entero
-    glideTo(chan, Math.max(cy, entryWin[0] + 4), entryWin[1] - 4);
-    // Enhebra los nudos: aqui si es una recta tensa, es un hilo con nudos
-    for (const n of nodes) d += ` L ${r(n.x)} ${r(n.y)}`;
-    cx = nodes[nodes.length - 1].x;
-    cy = nodes[nodes.length - 1].y;
-    // Sale del canal y sigue colgando por el lado mas cercano
-    const outL = hangSpot(exitWin[1], tailY, "L", chan);
-    const outR = hangSpot(exitWin[1], tailY, "R", chan);
-    const spotB = Math.abs(outL.base - chan) <= Math.abs(outR.base - chan) ? outL : outR;
-    glideTo(spotB.base, Math.max(cy + 6, exitWin[0] + 4), exitWin[1] - 4);
-    hangTo(tailY, spotB.base, spotB.amp);
+  if (threading) {
+    /*
+      Del centro del hero al canal de LA EXPERIENCIA en una sola curva larga.
+      Nada de bajar antes por el costado y volver: ese rodeo es el que no cabe
+      en pantalla ancha y obligaba a resolverlo a codazos. Dentro del canal el
+      hilo baja tenso y sin mecerse, porque va a enhebrar tres nudos.
+    */
+    push(chanX, startY + sweep(chanX - mid));
+    hangTo(knotTop, chanX, 0);
+    for (const n of nodes) push(n.x, n.y);
+    // Pasados los nudos vuelve a colgar suelto por el costado con mas aire.
+    const spot = pickSide(knotBottom, tailY, chanX);
+    push(spot.base, knotBottom + sweep(spot.base - chanX));
+    hangTo(tailY, spot.base, spot.amp);
+  } else {
+    const spot = pickSide(startY, tailY, mid);
+    push(spot.base, startY + sweep(spot.base - mid));
+    hangTo(tailY, spot.base, spot.amp);
   }
 
-  // Final: se recoge un poco hacia dentro y termina, como una punta suelta.
-  const inward = cx < mid ? cx + W * 0.05 : cx - W * 0.05;
-  d += ` C ${r(cx)} ${r(cy + 24)}, ${r(inward)} ${r(toY - 16)}, ${r(inward)} ${r(toY - 6)}`;
-  return { d, w: W, h: H };
+  push(at().x < mid ? at().x + inwardDx : at().x - inwardDx, endY);
+  return { d: smooth(pts), cuts: raw.map((b) => inflate(b, CUT_PAD)), w: W, h: H };
+}
+
+/*
+  Los cortes. Se recorre la ruta y se anota que trozos caen encima de un
+  elemento: ahi el hilo desaparece y vuelve al otro lado. El resultado no es
+  otra ruta sino un patron de guiones, para que la curva siga siendo cuatro
+  bezier y no setecientos segmentos: el hilo se repinta en cada scroll y una
+  polilinea larga bajo el desenfoque le cuesta cara a un telefono.
+*/
+function cutPattern(path: SVGPathElement, cuts: Box[]): { dash: string; offset: number } {
+  const none = { dash: "none", offset: 0 };
+  const total = path.getTotalLength();
+  if (!total) return none;
+  const vis: [number, number][] = [];
+  let start: number | null = 0;
+  for (let s = 0; s <= total; s += SAMPLE) {
+    const p = path.getPointAtLength(s);
+    const covered = cuts.some((b) => p.y > b.t && p.y < b.b && p.x > b.l && p.x < b.r);
+    if (covered) {
+      if (start !== null) vis.push([start, s]);
+      start = null;
+    } else if (start === null) {
+      start = s;
+    }
+  }
+  if (start !== null) vis.push([start, total]);
+
+  const keep = vis.filter(([a, b]) => b - a >= MIN_RUN);
+  const drawn = keep.reduce((n, [a, b]) => n + (b - a), 0);
+  // Si la pagina se come casi todo el hilo, mejor entero que un rastro de migajas.
+  if (!keep.length || drawn < total * 0.3) return none;
+
+  const parts: number[] = [];
+  keep.forEach(([a, b], i) => {
+    if (i > 0) parts.push(a - keep[i - 1][1]); // el hueco
+    parts.push(b - a); // el trozo que se ve
+  });
+  // Una ultima separacion mas larga que el hilo entero: el patron no se repite.
+  parts.push(total);
+  // El desfase negativo arranca el patron donde empieza el primer trozo.
+  return { dash: parts.map(r).join(" "), offset: -keep[0][0] };
 }
 
 /*
   El SVG del hilo usa un viewBox 1:1 con la pagina, asi que una unidad del
   trazado es un pixel y el eje Y del trazado es directamente la altura de
-  pagina. Eso hace que el patron de guiones sea exacto y que se pueda dibujar
-  el hilo "hasta donde va leyendo el visitante".
+  pagina. Por eso el hilo se dibuja "hasta donde va leyendo el visitante" con
+  un recorte: basta una franja desde arriba hasta esa altura. Los guiones
+  quedan libres para lo que de verdad los necesita, que son los cortes.
 */
-type Lut = { ys: number[]; ss: number[]; total: number };
-
-function buildLut(p: SVGPathElement): Lut | null {
-  const total = p.getTotalLength();
-  if (!total) return null;
-  const steps = 400;
-  const ys: number[] = [];
-  const ss: number[] = [];
-  for (let i = 0; i <= steps; i++) {
-    const s = (total * i) / steps;
-    ys.push(p.getPointAtLength(s).y);
-    ss.push(s);
-  }
-  return { ys, ss, total };
-}
-
-function lenAtY(lut: Lut, y: number) {
-  const { ys, ss } = lut;
-  if (y <= ys[0]) return 0;
-  for (let i = 1; i < ys.length; i++) {
-    if (ys[i] >= y) {
-      const span = ys[i] - ys[i - 1];
-      const t = span > 0.001 ? (y - ys[i - 1]) / span : 0;
-      return ss[i - 1] + (ss[i] - ss[i - 1]) * t;
-    }
-  }
-  return lut.total;
-}
 
 let lastD = "";
 
 /** Devuelve true si la ruta cambio. */
 function applyPath() {
   const res = buildPath();
-  if (!res || res.d === lastD) return false;
+  const svg = document.getElementById("hilo-svg") as SVGSVGElement | null;
+  if (!res || !svg) return false;
+  if (res.d === lastD) return false;
   lastD = res.d;
-  const svg = document.getElementById("hilo-svg");
-  if (svg) svg.setAttribute("viewBox", `0 0 ${res.w} ${res.h}`);
-  document.querySelectorAll<SVGPathElement>("path.hilo-main").forEach((p) => {
+  svg.setAttribute("viewBox", `0 0 ${res.w} ${res.h}`);
+  const paths = [...document.querySelectorAll<SVGPathElement>("path.hilo-main")];
+  paths.forEach((p) => {
     p.setAttribute("d", res.d);
     // Con el viewBox 1:1 sobra, y ademas enturbia las unidades del guion.
     p.removeAttribute("vector-effect");
   });
+  const pat = paths.length ? cutPattern(paths[0], res.cuts) : { dash: "none", offset: 0 };
+  paths.forEach((p) => {
+    p.setAttribute("stroke-dasharray", pat.dash);
+    p.setAttribute("stroke-dashoffset", String(r(pat.offset)));
+  });
+  // Sin animacion el hilo se ve entero; el recorte solo lo tapa al hacer scroll.
+  const clip = document.getElementById("hilo-clip-rect");
+  if (clip) {
+    clip.setAttribute("width", String(res.w));
+    clip.setAttribute("height", String(res.h));
+  }
   return true;
 }
 
@@ -355,22 +373,17 @@ export default function Fx() {
       drawMain = () => {
         mainST?.kill();
         mainST = null;
-        const paths = [...document.querySelectorAll<SVGPathElement>(".hilo-main")];
-        if (!paths.length) return;
-        const lut = buildLut(paths[0]);
-        if (!lut) return;
-        paths.forEach((p) =>
-          gsap.set(p, { strokeDasharray: lut.total, strokeDashoffset: lut.total })
-        );
-        const setters = paths.map((p) =>
-          gsap.quickTo(p, "strokeDashoffset", { duration: 0.45, ease: "power2.out" })
-        );
+        const clip = document.getElementById("hilo-clip-rect");
+        if (!clip) return;
+        clip.setAttribute("height", "0");
         // La punta del hilo va justo por delante de la lectura.
-        const update = () => {
-          const target = window.scrollY + window.innerHeight * 0.62;
-          const drawn = lenAtY(lut, target);
-          setters.forEach((set) => set(lut.total - drawn));
-        };
+        const head = { y: 0 };
+        const setY = gsap.quickTo(head, "y", {
+          duration: 0.45,
+          ease: "power2.out",
+          onUpdate: () => clip.setAttribute("height", String(Math.max(0, Math.round(head.y)))),
+        });
+        const update = () => setY(window.scrollY + window.innerHeight * 0.62);
         update();
         mainST = ScrollTrigger.create({
           trigger: document.documentElement,
