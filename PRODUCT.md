@@ -25,7 +25,7 @@ Award-winning mentalist with 10+ years performing across Guatemala, Chile, Colom
 - Static site on Netlify at rafaelgmagia.com; single-file pages (embedded CSS/JS), no frameworks, no build step.
 - Strict CSP in netlify.toml (self + Google Fonts + Instagram embed domains only).
 - Spanish-only copy. Desktop-first, must work to 375px.
-- Ticket sales happen off-site at Ticketplate (`https://bp.ticketplate.com/checkout/conexiones-202607311900/select/Gold`).
+- Ticket sales happen off-site at Ticketplate (`https://bp.ticketplate.com/checkout/conexiones-202607311900?type=seats`).
 
 ## Capabilities and Constraints
 

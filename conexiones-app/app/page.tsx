@@ -3,8 +3,12 @@ import Fx from "@/components/Fx";
 import InstagramReel from "@/components/InstagramReel";
 import poster from "@/public/img/poster-conexiones-960x1280.jpg";
 
-const TICKETS_URL =
-  "https://bp.ticketplate.com/checkout/conexiones-202607311900/select/Gold";
+/*
+  El enlace de Ticketplate cambio: la ruta /select/Gold dejo de funcionar y
+  ahora la compra empieza en la seleccion de asientos. El slug con fecha de
+  julio es cosa de Ticketplate; el evento correcto es el del 29 de agosto.
+*/
+const TICKETS_URL = "https://bp.ticketplate.com/checkout/conexiones-202607311900?type=seats";
 
 export default function Page() {
   return (
