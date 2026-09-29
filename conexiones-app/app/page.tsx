@@ -4,11 +4,10 @@ import InstagramReel from "@/components/InstagramReel";
 import poster from "@/public/img/poster-conexiones-960x1280.jpg";
 
 /*
-  El enlace de Ticketplate cambio: la ruta /select/Gold dejo de funcionar y
-  ahora la compra empieza en la seleccion de asientos. El slug con fecha de
-  julio es cosa de Ticketplate; el evento correcto es el del 29 de agosto.
+  La compra empieza en la seleccion de asientos (la ruta /select/Gold dejo de
+  funcionar). Funcion nueva: sabado 31 de octubre, 7:00 PM, edicion Halloween.
 */
-const TICKETS_URL = "https://bp.ticketplate.com/checkout/conexiones-202607311900?type=seats";
+const TICKETS_URL = "https://bp.ticketplate.com/checkout/conexiones-202610311900?type=seats";
 
 export default function Page() {
   return (
@@ -146,7 +145,7 @@ export default function Page() {
                 data-line-inner
                 className="text-[10px] font-medium uppercase tracking-[0.18em] text-accent md:text-[12px] md:tracking-[0.22em]"
               >
-                Sábado 29 de agosto · Teatro Ocho, Las Mercedes, Caracas
+                Sábado 31 de octubre · Teatro Ocho, Las Mercedes, Caracas
               </p>
             </div>
             <div className="mt-10 overflow-hidden">
@@ -265,7 +264,7 @@ export default function Page() {
               <div data-zoom className="glow-panel relative aspect-[3/4] overflow-hidden">
                 <Image
                   src={poster}
-                  alt="Flyer oficial de Conexiones: Rafael Gorrochotegui tras una jaula, con la mirada al frente"
+                  alt="Flyer oficial de Conexiones, edición Halloween: Rafael Gorrochotegui con la mano extendida hacia el frente, sábado 31 de octubre, 7:00 PM, Teatro Ocho"
                   fill
                   sizes="(min-width: 768px) 40vw, 90vw"
                   className="object-cover"
@@ -345,7 +344,7 @@ export default function Page() {
             >
               <div className="flex items-baseline justify-between gap-6 border-b border-accent-dim/40 pb-3">
                 <dt className="text-accent">Fecha</dt>
-                <dd className="text-right text-ivory/85">Sábado 29 de agosto de 2026</dd>
+                <dd className="text-right text-ivory/85">Sábado 31 de octubre de 2026</dd>
               </div>
               <div className="flex items-baseline justify-between gap-6 border-b border-accent-dim/40 pb-3">
                 <dt className="text-accent">Hora</dt>

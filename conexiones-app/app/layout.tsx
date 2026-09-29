@@ -21,11 +21,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://rafaelgmagia.com"),
   title: "Conexiones | Un espectáculo de Rafael Gorrochotegui",
   description:
-    "Hay hilos que no se ven. Esta noche, sí. Magia y mentalismo en vivo con Rafael Gorrochotegui. Sábado 29 de agosto, Teatro Ocho, Las Mercedes, Caracas.",
+    "Hay hilos que no se ven. Esta noche, sí. Magia y mentalismo en vivo con Rafael Gorrochotegui. Sábado 31 de octubre, Teatro Ocho, Las Mercedes, Caracas.",
   openGraph: {
     title: "Conexiones | Un espectáculo de Rafael Gorrochotegui",
     description:
-      "Magia y mentalismo en vivo. Sábado 29 de agosto, Teatro Ocho, Las Mercedes, Caracas.",
+      "Magia y mentalismo en vivo. Sábado 31 de octubre, Teatro Ocho, Las Mercedes, Caracas.",
     locale: "es_VE",
     type: "website",
   },

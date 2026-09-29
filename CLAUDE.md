@@ -231,6 +231,8 @@ Text-based names — no image files available:
 - Hero image preloaded; verified desktop 1440px and mobile 375px via Playwright, zero broken images.
 - On mobile the 8th Shows photo spans full width instead of sitting orphaned at half width.
 
+**Where /conexiones lives now:** the live page is the Next.js static export in `conexiones-app/` (added 2026-08-04, see Step 13). `build.sh` builds it and copies `conexiones-app/out` to `dist/conexiones`, and only `index.html`, `img/` and `js/` from the root are published. Steps 10 to 12 describe the legacy `conexiones/index.html`, which stays in the repo but is not deployed. Edit `conexiones-app/` for any /conexiones change.
+
 **Step 10 — /conexiones show page (2026-08-03)**
 - New nested page `conexiones/index.html` served at `rafaelgmagia.com/conexiones/` — standalone file with embedded CSS/JS duplicated+trimmed from the main page (tokens, reset, utilities, cursor, pill nav, social buttons, footer; no loader, no hero effects). Keep design tokens in sync with `index.html`.
 - Content: compact page hero ("Conexiones" + hook line), flyer (`img/conexiones-flyer.jpg`, portrait 960×1280) + synopsis 2-col grid, event-details card (Sáb 29 de agosto · Teatro Ocho, Las Mercedes · puertas 6 PM / show 7 PM · 12+), Ticketplate CTA (`https://bp.ticketplate.com/checkout/conexiones-202607311900?type=seats`, "Entradas desde Ref. 10 + fee"), gold divider, Instagram reels section (1 official embed live: reel DYm2tfcuRST; embed.js lazy-injected via IntersectionObserver), final CTA band, footer.
@@ -252,11 +254,16 @@ Text-based names — no image files available:
 - Progressive enhancement: DOM `<img>` flyer + CSS light pools are the default; `body.stage-3d` swaps in the canvas only on successful WebGL init. Reduced-motion: no scene, static lit composition.
 - Content sections below the act unchanged from v1.1 (ticker, synopsis grid, ticket band, reel, close).
 
+**Step 13: /conexiones as a Next.js app (2026-08-04 onward)**
+- `conexiones-app/`: Next.js App Router + Tailwind 4 + GSAP ScrollTrigger, static export with `basePath: "/conexiones"`. Anton for titles, flyer red as accent. One hero animation: the thread (el hilo), in `components/Fx.tsx`. Design notes in `conexiones-app/README.md`.
+- Event copy lives in `app/page.tsx` (`TICKETS_URL`, hero date line, details list) and `app/layout.tsx` (meta and OG descriptions). The flyer is `public/img/poster-conexiones-960x1280.jpg`, used for both the hero background and the "El show" section. No OG image is set yet.
+- 2026-09-28: new date, Sábado 31 de octubre 2026, 7:00 PM (edición Halloween), doors still 6:00 PM per the client. Ticket link `https://bp.ticketplate.com/checkout/conexiones-202610311900?type=seats`. Poster replaced with the Halloween art; sources in `flyer-conexiones/halloween-{3x4,1x1,9x16}.jpg`.
+
 ### 🔲 Remaining before launch
 - Contact forms submit via `mailto:` (opens the visitor's mail app). Wire Formspree or EmailJS for real delivery.
 - Logos 4–6 in the marquee still have generic `alt="Logo"`; get real names from Rafael.
-- Conexiones: reels 2 y 3 pendientes — two commented `.ig-embed-card` slots in `conexiones/index.html` (grep `TODO-PENDIENTE`).
-- Conexiones date note: client confirmed Sáb 29 de agosto is correct; the Ticketplate slug (`…202607311900`) is the ticketing site's own misnaming — link verified as the right event.
+- Conexiones: only one reel embedded (`InstagramReel` in `conexiones-app/app/page.tsx`); reels 2 and 3 still pending from the client.
+- Conexiones: the app sets no OG image; `flyer-conexiones/halloween-1x1.jpg` is the candidate.
 
 ---
 
