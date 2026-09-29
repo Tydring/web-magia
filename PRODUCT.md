@@ -30,7 +30,7 @@ Award-winning mentalist with 10+ years performing across Guatemala, Chile, Colom
 ## Capabilities and Constraints
 
 - Contact forms are mailto-based (real delivery service pending).
-- Conexiones show facts (from the client's flyer and notes): Sábado 31 de octubre 2026 (edición Halloween) · Teatro Ocho, Las Mercedes, Caracas · doors 6:00 PM, show 7:00 PM · ages 12+ · tickets "desde Ref. 10 + fee" · sales final, no refunds. Date moved on 2026-09-28 from Sáb 29 de agosto to Sáb 31 de octubre, 7:00 PM; client kept doors at 6:00 PM.
+- Conexiones show facts (from the client's flyer and notes): Sábado 31 de octubre 2026 (edición Halloween) · Teatro Ocho, Las Mercedes, Caracas · doors 6:00 PM, show 7:00 PM · ages 12+ · tickets "desde Ref. 15 + fee" (was Ref. 10 until 2026-09-28) · sales final, no refunds. Date moved on 2026-09-28 from Sáb 29 de agosto to Sáb 31 de octubre, 7:00 PM; client kept doors at 6:00 PM.
 - Production credits on flyer: Producción general Dennys Alexander Ledezma; asistencia de escena Gadir Garmendia; asistencia general Rudén Rodríguez; fotografía/arte/iluminación Shonny Romero. Sponsors/venues on flyer: Producciones Dionisíacas, Ticketplate, Teatro Ocho, Baruta.
 
 ## Brand Commitments

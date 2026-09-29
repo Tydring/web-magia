@@ -2,6 +2,7 @@ import Image from "next/image";
 import Fx from "@/components/Fx";
 import InstagramReel from "@/components/InstagramReel";
 import poster from "@/public/img/poster-conexiones-960x1280.jpg";
+import heroEyes from "@/public/img/hero-conexiones-ojos-1000x800.jpg";
 
 /*
   La compra empieza en la seleccion de asientos (la ruta /select/Gold dejo de
@@ -72,13 +73,24 @@ export default function Page() {
         {/* 1. HERO */}
         <section id="hero" className="relative z-10 flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 text-center">
           <div className="absolute inset-0 z-0" aria-hidden="true">
+            {/*
+              Solo la mirada: recorte de flyer-conexiones/halloween-3x4.jpg
+              (1000x800 desde x165 y516) con el punto medio de los ojos en 50% / 30%.
+              El zoom escala desde ese punto, asi que los ojos no se mueven al
+              ajustarlo; nariz y boca caen bajo el titulo y el degradado.
+              El texto del flyer queda en el 23.5% izquierdo del recorte: entre sm y md
+              (sin el degradado lateral) el zoom 1.6 lo deja fuera de cuadro.
+              El zoom 1.75 y el degradado lateral son solo para pantallas horizontales:
+              en una tablet vertical empujarian los ojos hacia los bordes oscuros.
+              Si cambia el flyer, medir los ojos y recortar de nuevo.
+            */}
             <Image
-              src={poster}
+              src={heroEyes}
               alt=""
               fill
               priority
               sizes="100vw"
-              className="-translate-y-[100px] scale-125 object-cover opacity-50 md:translate-y-0 md:scale-[1.4] md:opacity-30"
+              className="origin-[50%_30%] -translate-y-[8%] scale-[1.2] object-cover opacity-50 sm:scale-[1.6] md:landscape:translate-y-0 md:landscape:scale-[1.75] md:landscape:opacity-30"
             />
             {/*
               Slot opcional de video: sustituir la imagen por un video mudo en loop
@@ -90,7 +102,7 @@ export default function Page() {
             */}
             <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.5)_0%,rgba(0,0,0,0.12)_32%,rgba(0,0,0,0.7)_62%,#000_85%)]" />
             {/* Foco central solo en pantallas anchas: funde los bordes del flyer */}
-            <div className="absolute inset-0 hidden bg-[linear-gradient(to_right,#000_10%,transparent_38%,transparent_62%,#000_90%)] md:block" />
+            <div className="absolute inset-0 hidden bg-[linear-gradient(to_right,#000_10%,transparent_38%,transparent_62%,#000_90%)] md:landscape:block" />
           </div>
 
           {/* DRAFT COPY: Rafael reviews before launch */}
@@ -157,7 +169,7 @@ export default function Page() {
                   Comprar entradas
                 </a>
                 <span className="text-[11px] tracking-[0.15em] text-ivory/60">
-                  Desde Ref. 10 + fee
+                  Desde Ref. 15 + fee
                 </span>
               </div>
             </div>
@@ -372,7 +384,7 @@ export default function Page() {
                 Comprar entradas
               </a>
               <p className="text-[11px] tracking-[0.15em] text-ivory/60">
-                Desde Ref. 10 + fee · Ventas finales, sin reembolso
+                Desde Ref. 15 + fee · Ventas finales, sin reembolso
               </p>
             </div>
           </div>

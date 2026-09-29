@@ -256,7 +256,7 @@ Text-based names — no image files available:
 
 **Step 13: /conexiones as a Next.js app (2026-08-04 onward)**
 - `conexiones-app/`: Next.js App Router + Tailwind 4 + GSAP ScrollTrigger, static export with `basePath: "/conexiones"`. Anton for titles, flyer red as accent. One hero animation: the thread (el hilo), in `components/Fx.tsx`. Design notes in `conexiones-app/README.md`.
-- Event copy lives in `app/page.tsx` (`TICKETS_URL`, hero date line, details list) and `app/layout.tsx` (meta and OG descriptions). The flyer is `public/img/poster-conexiones-960x1280.jpg`, used for both the hero background and the "El show" section. No OG image is set yet.
+- Event copy lives in `app/page.tsx` (`TICKETS_URL`, hero date line, details list) and `app/layout.tsx` (meta and OG descriptions). The flyer in "El show" is `public/img/poster-conexiones-960x1280.jpg`; the hero background is `public/img/hero-conexiones-ojos-1000x800.jpg`, an eyes-only crop of the same art (eye midpoint at 50% / 30%, crop box documented in the `page.tsx` comment). Price: "Desde Ref. 15 + fee" since 2026-09-28. No OG image is set yet.
 - 2026-09-28: new date, Sábado 31 de octubre 2026, 7:00 PM (edición Halloween), doors still 6:00 PM per the client. Ticket link `https://bp.ticketplate.com/checkout/conexiones-202610311900?type=seats`. Poster replaced with the Halloween art; sources in `flyer-conexiones/halloween-{3x4,1x1,9x16}.jpg`.
 
 ### 🔲 Remaining before launch
